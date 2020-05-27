@@ -12,3 +12,4 @@ while seller.num_of_goods > 0 and buyer.money >= seller.min_price:
 
 print(seller)
 print(buyer)
+print("hello")
