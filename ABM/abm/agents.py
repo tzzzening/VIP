@@ -1,16 +1,13 @@
 from mesa import Agent
 
 
-class MoneyAgent(Agent):  # may not need this
-    """An agent in the MoneyModel."""
-    def __init__(self, unique_id, model):
+class Seller(Agent):
+    """
+    A seller that ...
+    """
+    def __init__(self, unique_id, num_goods, min_price, model):
         super().__init__(unique_id, model)
-
-
-class Seller(MoneyAgent):
-    def __init__(self, unique_id, num_of_goods, min_price, model):
-        super().__init__(unique_id, model)
-        self.num_of_goods = num_of_goods
+        self.num_of_goods = num_goods
         self.min_price = min_price
 
     def __str__(self):
@@ -19,11 +16,20 @@ class Seller(MoneyAgent):
     def sell(self):
         self.num_of_goods -= 1
 
+    def step(self):
+        print("seller step")
 
-class Buyer(MoneyAgent):
-    def __init__(self, unique_id, money, max_price, model):
+    # def advance(self):
+    #     print("seller advance")
+
+
+class Buyer(Agent):
+    """
+    A buyer that ...
+    """
+    def __init__(self, unique_id, amt_money, max_price, model):
         super().__init__(unique_id, model)
-        self.money = money
+        self.money = amt_money
         self.max_price = max_price
 
     def __str__(self):
@@ -31,3 +37,11 @@ class Buyer(MoneyAgent):
 
     def buy(self, cost):
         self.money -= cost
+
+    def step(self):
+        print("buyer step")
+
+    # def advance(self):
+    #     print("buyer advance")
+
+
