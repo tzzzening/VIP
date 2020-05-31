@@ -9,7 +9,7 @@ class MoneyModel(Model):
         self.schedule = SimultaneousActivation(self)
         for i in range(num_agents):
             seller = Seller(i, 5, 5, self)
-            buyer = Buyer(1, 50, 10, self)
+            buyer = Buyer(i, 50, 10, self)
             self.schedule.add(seller)
             self.schedule.add(buyer)
 
