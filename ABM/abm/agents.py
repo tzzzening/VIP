@@ -10,28 +10,29 @@ class Seller(Agent):
         self.goods_left = goods_left
         self.min_price = min_price
         self.buyer = None
+        self.is_matched = False
 
     def __str__(self):
-        return "Seller {} has {} goods left.".format(self.unique_id, self.goods_left)
+        return "Agent {} (seller) has {} goods left.".format(self.unique_id, self.goods_left)
 
     def sell(self):
         self.goods_left -= 1
 
     def step(self):
         print("seller step")
-        # if self.goods_left > 0 and self.buyer.money_left >= self.min_price:
-        #     if self.min_price <= self.buyer.max_price:
-        #         self.sell()
-        # okay no it won't work. i need a way to check if it's supposed to sell in
-        # the advance method
+        # if self.is_matched:
+        #     self.sell()
 
-    # while seller.num_of_goods > 0 and buyer.money >= seller.min_price:
-    #     if seller.min_price <= buyer.max_price:
-    #         seller.sell()
-    #         buyer.buy((seller.min_price + buyer.max_price) / 2)
 
-    # def advance(self):
-    #     print("seller advance")
+
+    def advance(self):
+        print("seller advance")
+        if self.is_matched:
+            self.sell()
+
+    # @property
+    # def has_goods_left(self):
+    #     return self.goods_left > 0
 
 
 class Buyer(Agent):
@@ -43,17 +44,31 @@ class Buyer(Agent):
         self.money_left = money_left
         self.max_price = max_price
         self.seller = None
+        self.is_matched = False
 
     def __str__(self):
-        return "Buyer {} has ${} left.".format(self.unique_id, self.money_left)
+        return "Agent {} (buyer) has ${} left.".format(self.unique_id, self.money_left)
 
-    def buy(self, cost):
+    def buy(self):
+        cost = (self.max_price + self.seller.min_price) / 2
         self.money_left -= cost
 
     def step(self):
         print("buyer step")
+        # if self.is_matched:
+        #     self.buy()
 
-    # def advance(self):
-    #     print("buyer advance")
+    # @property
+    # def goods_price(self):
+    #     return (self.max_price + self.seller.min_price) / 2
+
+    def advance(self):
+        print("buyer advance")
+        if self.is_matched:
+            self.buy()
+
+    # @property
+    # def has_money_left(self):
+    #     return
 
 

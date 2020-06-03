@@ -1,7 +1,7 @@
-# from abm.agents import Seller, Buyer
+from abm.agents import Seller, Buyer
 from abm.model import MoneyModel
 
-# model = Model()
+# model = MoneyModel(1)
 # seller = Seller(1, 5, 5, model)
 # buyer = Buyer(1, 50, 10, model)
 #

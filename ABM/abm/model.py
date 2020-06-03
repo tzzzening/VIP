@@ -1,15 +1,16 @@
 from mesa import Model
-from mesa.time import SimultaneousActivation
+from abm.time import SimultaneousActivationMoneyModel
 from abm.agents import Seller, Buyer
 
 
 class MoneyModel(Model):
-    def __init__(self, num_agents):
-        self.num_agents = num_agents
-        self.schedule = SimultaneousActivation(self)
-        for i in range(num_agents):
-            seller = Seller(i, 5, 5, self)
-            buyer = Buyer(i, 50, 10, self)
+    def __init__(self, num_per_agent):
+        super().__init__()
+        self.num_per_agent = num_per_agent
+        self.schedule = SimultaneousActivationMoneyModel(self)
+        for i in range(num_per_agent):
+            seller = Seller(unique_id=self.next_id(), goods_left=5, min_price=10, model=self)
+            buyer = Buyer(unique_id=self.next_id(), money_left=50, max_price=10, model=self)
             self.schedule.add(seller)
             self.schedule.add(buyer)
 
@@ -17,7 +18,7 @@ class MoneyModel(Model):
         self.schedule.step()
 
     def __str__(self):
-        output = "Current status:\n"
+        output = "\nCurrent status:\n"
         for i in self.schedule.agents:
             output += i.__str__()
             output += "\n"
