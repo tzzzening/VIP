@@ -1,4 +1,5 @@
 from queue import PriorityQueue
+import bisect
 
 
 class CustomPriorityQueue(PriorityQueue):
