@@ -24,17 +24,6 @@ class Seller(Agent):
             self.sell()
 
 
-
-    def advance(self):
-        print("seller advance")
-        # if self.is_matched:
-        #     self.sell()
-
-    # @property
-    # def has_goods_left(self):
-    #     return self.goods_left > 0
-
-
 class Buyer(Agent):
     """
     A buyer that ...
@@ -58,17 +47,9 @@ class Buyer(Agent):
         if self.is_matched:
             self.buy()
 
-    # @property
-    # def goods_price(self):
-    #     return (self.max_price + self.seller.min_price) / 2
 
-    def advance(self):
-        print("buyer advance")
-        # if self.is_matched:
-        #     self.buy()
 
-    # @property
-    # def has_money_left(self):
-    #     return
+
+
 
 

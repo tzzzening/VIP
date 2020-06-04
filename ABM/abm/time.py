@@ -1,10 +1,11 @@
 from mesa.time import SimultaneousActivation
+from mesa.time import BaseScheduler
 from mesa.agent import Agent
 from abm.agents import Buyer, Seller
 from abm.priority_queue import SellerPriorityQueue, BuyerPriorityQueue
 
 
-class SimultaneousActivationMoneyModel(SimultaneousActivation):
+class BaseSchedulerMoneyModel(BaseScheduler):
     """
     SimultaneousActivation class with added priority queues to store buyers and sellers separately.
     """
@@ -24,14 +25,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             raise Exception  # specify exception later, not sure about python exceptions
 
     def step(self) -> None:
-        """ Step all agents, then advance them. """
         self.match_agents()
-        # invoke step and advance methods of individual agents
-        agent_keys = list(self._agents.keys())
-        for agent_key in agent_keys:
-            self._agents[agent_key].step()
-        for agent_key in agent_keys:
-            self._agents[agent_key].advance()
+        for agent in self.agent_buffer(shuffled=False):
+            agent.step()
         self.steps += 1
         self.time += 1
 
