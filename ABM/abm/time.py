@@ -1,8 +1,8 @@
-from mesa.time import SimultaneousActivation
 from mesa.time import BaseScheduler
 from mesa.agent import Agent
 from abm.agents import Buyer, Seller
 from abm.priority_queue import SellerPriorityQueue, BuyerPriorityQueue
+import bisect
 
 
 class BaseSchedulerMoneyModel(BaseScheduler):
@@ -12,15 +12,15 @@ class BaseSchedulerMoneyModel(BaseScheduler):
 
     def __init__(self, model):
         super().__init__(model)
-        self.sellers = SellerPriorityQueue()
-        self.buyers = BuyerPriorityQueue()
+        self.sellers = []
+        self.buyers = []
 
     def add(self, agent: Agent) -> None:
         self._agents[agent.unique_id] = agent
         if isinstance(agent, Seller):
-            self.sellers.put_in_queue(agent)
+            bisect.insort(self.sellers, (agent.min_price, agent.unique_id, agent))
         elif isinstance(agent, Buyer):
-            self.buyers.put_in_queue(agent)
+            bisect.insort(self.buyers, (agent.max_price, agent.unique_id, agent))
         else:
             raise Exception  # specify exception later, not sure about python exceptions
 
@@ -32,9 +32,10 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         self.time += 1
 
     def match_agents(self):
-        self.unmatch_agents()  # initialize is_matched status of all agents
-        seller = self.sellers.peek()[2]
-        buyer = self.buyers.peek()[2]
+        self.initialise_agents()
+        
+        seller = self.sellers[0][2]
+        buyer = self.buyers[0][2]
         seller_has_goods_left = seller.goods_left > 0
         buyer_has_enough_money = buyer.money_left >= buyer.max_price
 
@@ -44,10 +45,11 @@ class BaseSchedulerMoneyModel(BaseScheduler):
                 buyer.seller = seller
                 seller.is_matched = True
                 buyer.is_matched = True
-                self.sellers.get()  # can consider changing to the remove_task stuff from pq
-                self.buyers.get()
+                del self.sellers[0]
+                del self.buyers[0]
 
-    def unmatch_agents(self):  # seems super inefficient though
+    def initialise_agents(self):  # seems super inefficient though
+        """ Resets the is_matched variable of all agents to False"""
         for agent in self.agents:
             agent.is_matched = False
 
