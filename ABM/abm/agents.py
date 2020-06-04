@@ -20,15 +20,15 @@ class Seller(Agent):
 
     def step(self):
         print("seller step")
-        # if self.is_matched:
-        #     self.sell()
+        if self.is_matched:
+            self.sell()
 
 
 
     def advance(self):
         print("seller advance")
-        if self.is_matched:
-            self.sell()
+        # if self.is_matched:
+        #     self.sell()
 
     # @property
     # def has_goods_left(self):
@@ -55,8 +55,8 @@ class Buyer(Agent):
 
     def step(self):
         print("buyer step")
-        # if self.is_matched:
-        #     self.buy()
+        if self.is_matched:
+            self.buy()
 
     # @property
     # def goods_price(self):
@@ -64,8 +64,8 @@ class Buyer(Agent):
 
     def advance(self):
         print("buyer advance")
-        if self.is_matched:
-            self.buy()
+        # if self.is_matched:
+        #     self.buy()
 
     # @property
     # def has_money_left(self):

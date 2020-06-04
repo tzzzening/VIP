@@ -37,8 +37,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
     def match_agents(self):
         self.unmatch_agents()  # initialize is_matched status of all agents
-        seller = self.sellers.queue[0][2]
-        buyer = self.buyers.queue[0][2]
+        seller = self.sellers.peek()[2]
+        buyer = self.buyers.peek()[2]
         seller_has_goods_left = seller.goods_left > 0
         buyer_has_enough_money = buyer.money_left >= seller.min_price
 

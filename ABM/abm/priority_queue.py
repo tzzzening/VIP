@@ -1,7 +1,15 @@
 from queue import PriorityQueue
 
 
-class SellerPriorityQueue(PriorityQueue):
+class CustomPriorityQueue(PriorityQueue):
+    def __init__(self):
+        super().__init__()
+
+    def peek(self):
+        return self.queue[0]
+
+
+class SellerPriorityQueue(CustomPriorityQueue):
     def __init__(self):
         super().__init__()
 
@@ -9,7 +17,7 @@ class SellerPriorityQueue(PriorityQueue):
         self.put((seller.min_price, seller.unique_id, seller))
 
 
-class BuyerPriorityQueue(PriorityQueue):
+class BuyerPriorityQueue(CustomPriorityQueue):
     def __init__(self):
         super().__init__()
 
