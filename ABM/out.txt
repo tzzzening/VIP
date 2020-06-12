@@ -1,0 +1,41 @@
+Agent 9 (seller) has 2 goods left, with min price of 5
+Agent 5 (seller) has 11 goods left, with min price of 6
+Agent 17 (seller) has 10 goods left, with min price of 7
+Agent 19 (seller) has 4 goods left, with min price of 7
+Agent 1 (seller) has 4 goods left, with min price of 8
+Agent 13 (seller) has 11 goods left, with min price of 8
+Agent 3 (seller) has 6 goods left, with min price of 9
+Agent 11 (seller) has 8 goods left, with min price of 9
+Agent 15 (seller) has 11 goods left, with min price of 10
+Agent 7 (seller) has 3 goods left, with min price of 11
+Agent 4 (buyer) has $9 left, with max price of 7
+Agent 20 (buyer) has $6 left, with max price of 7
+Agent 6 (buyer) has $10 left, with max price of 8
+Agent 8 (buyer) has $9 left, with max price of 8
+Agent 18 (buyer) has $6 left, with max price of 8
+Agent 14 (buyer) has $6 left, with max price of 9
+Agent 12 (buyer) has $2 left, with max price of 10
+Agent 16 (buyer) has $1 left, with max price of 10
+Agent 10 (buyer) has $0 left, with max price of 12
+Agent 2 (buyer) has $1 left, with max price of 13
+
+Agent 9 (seller) has 1 goods left, with min price of 5
+Agent 5 (seller) has 10 goods left, with min price of 6
+Agent 17 (seller) has 9 goods left, with min price of 7
+Agent 19 (seller) has 4 goods left, with min price of 7
+Agent 1 (seller) has 4 goods left, with min price of 8
+Agent 13 (seller) has 11 goods left, with min price of 8
+Agent 3 (seller) has 6 goods left, with min price of 9
+Agent 11 (seller) has 8 goods left, with min price of 9
+Agent 15 (seller) has 11 goods left, with min price of 10
+Agent 7 (seller) has 3 goods left, with min price of 11
+Agent 4 (buyer) has $3.0 left, with max price of 7
+Agent 20 (buyer) has $6 left, with max price of 7
+Agent 6 (buyer) has $3.0 left, with max price of 8
+Agent 8 (buyer) has $1.5 left, with max price of 8
+Agent 18 (buyer) has $6 left, with max price of 8
+Agent 14 (buyer) has $6 left, with max price of 9
+Agent 12 (buyer) has $2 left, with max price of 10
+Agent 16 (buyer) has $1 left, with max price of 10
+Agent 10 (buyer) has $0 left, with max price of 12
+Agent 2 (buyer) has $1 left, with max price of 13

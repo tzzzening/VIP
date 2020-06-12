@@ -1,19 +1,26 @@
 from mesa.time import BaseScheduler
 from mesa.agent import Agent
 from abm.agents import Buyer, Seller
-from abm.priority_queue import SellerPriorityQueue, BuyerPriorityQueue
 import bisect
 
 
 class BaseSchedulerMoneyModel(BaseScheduler):
     """
-    SimultaneousActivation class with added priority queues to store buyers and sellers separately.
+    BaseScheduler class with added lists to store buyers and sellers separately.
     """
 
     def __init__(self, model):
         super().__init__(model)
         self.sellers = []
         self.buyers = []
+
+    def __str__(self):
+        output = ""
+        for i in self.sellers:
+            output += (i[2].__str__() + "\n")
+        for i in self.buyers:
+            output += (i[2].__str__() + "\n")
+        return output
 
     def add(self, agent: Agent) -> None:
         self._agents[agent.unique_id] = agent
@@ -37,7 +44,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         i = 0
         j = 0
         while True:  # remember to exit loop
-            print(i, j)
+            # print(i, j)
             seller = self.sellers[i][2]
             buyer = self.buyers[j][2]
             seller_has_goods_left = seller.goods_left > 0
@@ -80,6 +87,11 @@ class BaseSchedulerMoneyModel(BaseScheduler):
     def get_per_agent_count(self):
         return self.get_agent_count() // 2
 
+    def print_lists(self):
+        for i in self.sellers:
+            print(i)
+        for i in self.buyers:
+            print(i)
 
 
 

@@ -13,13 +13,13 @@ class Seller(Agent):
         self.is_matched = False
 
     def __str__(self):
-        return "Agent {} (seller) has {} goods left.".format(self.unique_id, self.goods_left)
+        return "Agent {} (seller) has {} goods left, with min price of {}"\
+            .format(self.unique_id, self.goods_left, self.min_price)
 
     def sell(self):
         self.goods_left -= 1
 
     def step(self):
-        print("seller step")
         if self.is_matched:
             self.sell()
 
@@ -36,14 +36,14 @@ class Buyer(Agent):
         self.is_matched = False
 
     def __str__(self):
-        return "Agent {} (buyer) has ${} left.".format(self.unique_id, self.money_left)
+        return "Agent {} (buyer) has ${} left, with max price of {}"\
+            .format(self.unique_id, self.money_left, self.max_price)
 
     def buy(self):
         cost = (self.max_price + self.seller.min_price) / 2
         self.money_left -= cost
 
     def step(self):
-        print("buyer step")
         if self.is_matched:
             self.buy()
 
