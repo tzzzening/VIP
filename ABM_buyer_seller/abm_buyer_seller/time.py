@@ -1,6 +1,6 @@
 from mesa.time import BaseScheduler
 from mesa.agent import Agent
-from abm.agents import Buyer, Seller
+from abm_buyer_seller.agents import Buyer, Seller
 import bisect
 
 
