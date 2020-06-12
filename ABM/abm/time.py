@@ -9,12 +9,12 @@ class BaseSchedulerMoneyModel(BaseScheduler):
     BaseScheduler class with added lists to store buyers and sellers separately.
     """
 
-    def __init__(self, model):
+    def __init__(self, model) -> None:
         super().__init__(model)
         self.sellers = []
         self.buyers = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         output = ""
         for i in self.sellers:
             output += (i[2].__str__() + "\n")
@@ -38,7 +38,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         self.steps += 1
         self.time += 1
 
-    def match_agents(self):
+    def match_agents(self) -> None:
         self.initialise_agents()
 
         i = 0
@@ -79,15 +79,15 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             #         # del self.sellers[0]
             #         # del self.buyers[0]
 
-    def initialise_agents(self):  # seems super inefficient though
+    def initialise_agents(self) -> None:  # seems super inefficient though
         """ Resets the is_matched variable of all agents to False"""
         for agent in self.agents:
             agent.is_matched = False
 
-    def get_per_agent_count(self):
+    def get_per_agent_count(self) -> int:
         return self.get_agent_count() // 2
 
-    def print_lists(self):
+    def print_lists(self) -> None:
         for i in self.sellers:
             print(i)
         for i in self.buyers:

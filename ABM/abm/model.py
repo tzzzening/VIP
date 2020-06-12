@@ -5,7 +5,7 @@ import random
 
 
 class MoneyModel(Model):
-    def __init__(self, num_per_agent):
+    def __init__(self, num_per_agent) -> None:
         super().__init__()
         self.num_per_agent = num_per_agent
         self.schedule = BaseSchedulerMoneyModel(self)
@@ -28,10 +28,10 @@ class MoneyModel(Model):
         # self.schedule.add(seller)
         # self.schedule.add(buyer)
 
-    def step(self):
+    def step(self) -> None:
         self.schedule.step()
 
-    def __str__(self):
+    def __str__(self) -> str:
         output = "\nCurrent status:\n"
 
         # to print in order of id
