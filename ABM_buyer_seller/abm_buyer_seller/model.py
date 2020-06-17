@@ -19,27 +19,10 @@ class MoneyModel(Model):
 
 
 
-        # seller = Seller(unique_id=self.next_id(), goods_left=5, min_price=5, model=self)
-        # buyer = Buyer(unique_id=self.next_id(), money_left=0, max_price=10, model=self)
-        # self.schedule.add(seller)
-        # self.schedule.add(buyer)
-        # seller = Seller(unique_id=self.next_id(), goods_left=5, min_price=5, model=self)
-        # buyer = Buyer(unique_id=self.next_id(), money_left=0, max_price=10, model=self)
-        # self.schedule.add(seller)
-        # self.schedule.add(buyer)
-
     def step(self) -> None:
         self.schedule.step()
 
     def __str__(self) -> str:
-        output = "\nCurrent status:\n"
-
-        # to print in order of id
-        # for i in self.schedule.agents:
-        #     output += i.__str__()
-        #     output += "\n"
-        # return output
-
         return self.schedule.__str__()  # to print in order of price
 
 

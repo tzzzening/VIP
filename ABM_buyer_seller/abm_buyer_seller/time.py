@@ -70,15 +70,6 @@ class BaseSchedulerMoneyModel(BaseScheduler):
                 i += 1
                 j += 1
 
-            # if seller_has_goods_left and buyer_has_enough_money:
-            #     if seller.min_price <= buyer.max_price:
-            #         seller.buyer = buyer
-            #         buyer.seller = seller
-            #         seller.is_matched = True
-            #         buyer.is_matched = True
-            #         # del self.sellers[0]
-            #         # del self.buyers[0]
-
     def initialise_agents(self) -> None:  # seems super inefficient though
         """ Resets the is_matched variable of all agents to False"""
         for agent in self.agents:
