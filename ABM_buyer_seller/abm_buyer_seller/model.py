@@ -1,7 +1,6 @@
 from mesa import Model
 from abm_buyer_seller.time import BaseSchedulerMoneyModel
 from abm_buyer_seller.agents import Seller, Buyer
-import random
 
 
 class MoneyModel(Model):
@@ -10,10 +9,10 @@ class MoneyModel(Model):
         self.num_per_agent = num_per_agent
         self.schedule = BaseSchedulerMoneyModel(self)
         for i in range(num_per_agent):
-            seller = Seller(unique_id=self.next_id(), goods_left=random.randint(0, 11),
-                            min_price=random.randint(5, 11), model=self)
-            buyer = Buyer(unique_id=self.next_id(), money_left=random.randint(0, 11),
-                          max_price=random.randint(7, 13), model=self)
+            seller = Seller(unique_id=self.next_id(), goods_left=5,
+                            min_price=5, model=self)
+            buyer = Buyer(unique_id=self.next_id(), money_left=50,
+                          max_price=10, model=self)
             self.schedule.add(seller)
             self.schedule.add(buyer)
 
