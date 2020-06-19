@@ -44,19 +44,22 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         i = 0
         j = 0
         while True:  # remember to exit loop
-            # print(i, j)
+            print(i, j)
             seller = self.sellers[i][2]
+            print("current seller: ", seller)
             buyer = self.buyers[j][2]
+            print("current buyer: ", buyer)
             seller_has_goods_left = seller.goods_left > 0
             buyer_has_enough_money = buyer.money_left >= buyer.max_price
 
             if not seller_has_goods_left:
-                if i == (self.get_per_agent_count() - 1):
+                if i == (self.get_seller_count() - 1):
+                    print("true")
                     break
                 i += 1
                 continue
             if not buyer_has_enough_money:
-                if j == (self.get_per_agent_count() - 1):
+                if j == (self.get_buyer_count() - 1):
                     break
                 j += 1
                 continue
@@ -65,7 +68,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
                 buyer.seller = seller
                 seller.is_matched = True
                 buyer.is_matched = True
-                if i == (self.get_per_agent_count() - 1) or j == (self.get_per_agent_count() - 1):
+                if i == (self.get_seller_count() - 1) or j == (self.get_buyer_count() - 1):
                     break
                 i += 1
                 j += 1
@@ -84,8 +87,11 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         for agent in self.agents:
             agent.is_matched = False
 
-    def get_per_agent_count(self) -> int:
-        return self.get_agent_count() // 2
+    def get_seller_count(self) -> int:
+        return len(self.sellers)
+
+    def get_buyer_count(self) -> int:
+        return len(self.buyers)
 
     def print_lists(self) -> None:
         for i in self.sellers:
