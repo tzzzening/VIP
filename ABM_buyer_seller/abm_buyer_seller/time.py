@@ -46,28 +46,28 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         while True:  # remember to exit loop
             print(i, j)
             seller = self.sellers[i][2]
-            print("current seller: ", seller)
+            print("current seller:", seller)
             buyer = self.buyers[j][2]
-            print("current buyer: ", buyer)
+            print("current buyer:", buyer)
             seller_has_goods_left = seller.goods_left > 0
             buyer_has_enough_money = buyer.money_left >= buyer.max_price
 
             if not seller_has_goods_left:
+                print('Seller has no more goods')
                 if i == (self.get_seller_count() - 1):
                     print("true")
                     break
                 i += 1
                 continue
             if not buyer_has_enough_money:
+                print('Buyer doesn\'t have enough money')
                 if j == (self.get_buyer_count() - 1):
                     break
                 j += 1
                 continue
             if seller.min_price <= buyer.max_price:
-                seller.buyer = buyer
-                buyer.seller = seller
-                seller.is_matched = True
-                buyer.is_matched = True
+                self.prepare_trade(seller, buyer)
+
                 if i == (self.get_seller_count() - 1) or j == (self.get_buyer_count() - 1):
                     break
                 i += 1
@@ -98,6 +98,23 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             print(i)
         for i in self.buyers:
             print(i)
+
+    @staticmethod
+    def prepare_trade(seller, buyer) -> None:
+        seller.buyer = buyer
+        buyer.seller = seller
+        seller.is_matched = True
+        buyer.is_matched = True
+
+        cost = (seller.min_price + buyer.max_price) / 2
+        buyer.cost = cost
+
+        seller_quantity = seller.goods_left
+        buyer_quantity = buyer.money_left // cost
+        trade_quantity = min(seller_quantity, buyer_quantity)
+        seller.trade_quantity = trade_quantity
+        buyer.trade_quantity = trade_quantity
+
 
 
 

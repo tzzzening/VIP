@@ -11,6 +11,7 @@ class Seller(Agent):
         self.min_price = min_price
         self.buyer = None
         self.is_matched = False
+        self.trade_quantity = None
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} goods left, with min price of {}. "\
@@ -20,7 +21,7 @@ class Seller(Agent):
         return output
 
     def sell(self) -> None:
-        self.goods_left -= 1
+        self.goods_left = self.goods_left - self.trade_quantity
 
     def step(self) -> None:
         if self.is_matched:
@@ -37,6 +38,8 @@ class Buyer(Agent):
         self.max_price = max_price
         self.seller = None
         self.is_matched = False
+        self.cost = None
+        self.trade_quantity = None
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has ${} left, with max price of {}. "\
@@ -46,8 +49,7 @@ class Buyer(Agent):
         return output
 
     def buy(self) -> None:
-        cost = (self.max_price + self.seller.min_price) / 2
-        self.money_left -= cost
+        self.money_left = self.money_left - (self.trade_quantity * self.cost)
 
     def step(self) -> None:
         if self.is_matched:
