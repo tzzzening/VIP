@@ -54,21 +54,21 @@ class BaseSchedulerMoneyModel(BaseScheduler):
 
             if not seller_has_goods_left:
                 print('Seller has no more goods')
-                if i == (self.get_seller_count() - 1):
+                if i == (self.seller_count - 1):
                     print("true")
                     break
                 i += 1
                 continue
             if not buyer_has_enough_money:
                 print('Buyer doesn\'t have enough money')
-                if j == (self.get_buyer_count() - 1):
+                if j == (self.buyer_count - 1):
                     break
                 j += 1
                 continue
             if seller.min_price <= buyer.max_price:
                 self.prepare_trade(seller, buyer)
 
-                if i == (self.get_seller_count() - 1) or j == (self.get_buyer_count() - 1):
+                if i == (self.seller_count - 1) or j == (self.buyer_count - 1):
                     break
                 i += 1
                 j += 1
@@ -87,10 +87,12 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         for agent in self.agents:
             agent.is_matched = False
 
-    def get_seller_count(self) -> int:
+    @property
+    def seller_count(self) -> int:
         return len(self.sellers)
 
-    def get_buyer_count(self) -> int:
+    @property
+    def buyer_count(self) -> int:
         return len(self.buyers)
 
     def print_lists(self) -> None:
