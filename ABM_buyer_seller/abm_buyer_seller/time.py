@@ -17,7 +17,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
     def __str__(self) -> str:
         output = ""
         for i in self.sellers:
-            output += (i[2].__str__() + "\n")
+            output += (i[2].__str__() + "\n")  # not sure if should change to get_seller_from_list
         for i in self.buyers:
             output += (i[2].__str__() + "\n")
         return output
@@ -45,9 +45,9 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         j = 0
         while True:  # remember to exit loop
             print(i, j)
-            seller = self.sellers[i][2]
+            seller = self.get_agent_from_list(i, 'Seller')
             print("current seller:", seller)
-            buyer = self.buyers[j][2]
+            buyer = self.get_agent_from_list(i, 'Buyer')
             print("current buyer:", buyer)
             seller_has_goods_left = seller.goods_left > 0
             buyer_has_enough_money = buyer.money_left >= buyer.max_price
@@ -116,6 +116,15 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
+
+    def get_agent_from_list(self, index, type) -> Agent:
+        if type == 'Seller':
+            return self.sellers[index][2]
+        assert type == 'Buyer', 'type is neither Buyer not Seller'
+        return self.buyers[index][2]
+
+
+
 
 
 
