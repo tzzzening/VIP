@@ -112,7 +112,9 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         buyer.cost = cost
 
         seller_quantity = seller.goods_left
-        buyer_quantity = buyer.money_left // cost
+        buyer_quantity = min(buyer.money_left // cost, buyer.capacity)
+        print('money left', buyer.money_left // cost)
+        print('cap', buyer.capacity)
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
