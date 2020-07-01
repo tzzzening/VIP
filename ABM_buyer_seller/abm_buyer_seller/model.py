@@ -5,6 +5,9 @@ from mesa.space import MultiGrid
 
 
 class WasteModel(Model):
+
+    num_steps = 0
+
     def __init__(self, num_per_agent, width, height) -> None:
         super().__init__()
         self.num_per_agent = num_per_agent
@@ -30,7 +33,10 @@ class WasteModel(Model):
 
 
     def step(self) -> None:
+        self.num_steps += 1
+        print('steps', self.num_steps)
         self.schedule.step()
+
 
     def __str__(self) -> str:
         # output = "\nCurrent status:\n"

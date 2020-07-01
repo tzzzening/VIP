@@ -21,12 +21,12 @@ model = WasteModel(10, 1, 1)
 # plt.hist(seller_goods)
 buyer_money = [b[2].money_left for b in model.schedule.buyers]
 fixed_params = {'width': 1, 'height': 1}
-variable_params = {'num_per_agent': range(1, 100)}
+variable_params = {'num_per_agent': range(1, 2)}
 batch_run = BatchRunner(WasteModel, variable_params, fixed_params, iterations=5, max_steps=1)
 batch_run.run_all()
 
-plt.hist(buyer_money)
-plt.show()
+# plt.hist(buyer_money)
+# plt.show()
 
 
 
