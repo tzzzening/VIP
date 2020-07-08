@@ -50,17 +50,16 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             buyer = self.get_agent_from_list(i, 'Buyer')
             print("current buyer:", buyer)
             seller_has_goods_left = seller.goods_left > 0
-            buyer_has_enough_money = buyer.money_left >= buyer.max_price
+            buyer_has_enough_capacity = buyer.monthly_capacity > 0
 
             if not seller_has_goods_left:
-                print('Seller has no more goods')
+                print('Seller has no more waste')
                 if i == (self.seller_count - 1):
-                    print("true")
                     break
                 i += 1
                 continue
-            if not buyer_has_enough_money:
-                print('Buyer doesn\'t have enough money')
+            if not buyer_has_enough_capacity:
+                print('Buyer doesn\'t have enough capacity')
                 if j == (self.buyer_count - 1):
                     break
                 j += 1
@@ -72,15 +71,6 @@ class BaseSchedulerMoneyModel(BaseScheduler):
                     break
                 i += 1
                 j += 1
-
-            # if seller_has_goods_left and buyer_has_enough_money:
-            #     if seller.min_price <= buyer.max_price:
-            #         seller.buyer = buyer
-            #         buyer.seller = seller
-            #         seller.is_matched = True
-            #         buyer.is_matched = True
-            #         # del self.sellers[0]
-            #         # del self.buyers[0]
 
     def initialise_agents(self) -> None:  # seems super inefficient though
         """ Resets the is_matched variable of all agents to False"""
@@ -112,9 +102,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         buyer.cost = cost
 
         seller_quantity = seller.goods_left
-        buyer_quantity = min(buyer.money_left // cost, buyer.capacity)
-        print('money left', buyer.money_left // cost)
-        print('cap', buyer.capacity)
+        buyer_quantity = buyer.monthly_capacity
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity

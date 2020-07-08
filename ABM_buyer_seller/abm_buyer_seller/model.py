@@ -17,8 +17,9 @@ class WasteModel(Model):
         self.schedule = BaseSchedulerMoneyModel(self)
         self.running = True
         for i in range(num_per_agent):
-            seller = Seller(unique_id=self.next_id(), goods_left=5, min_price=5, model=self)
-            buyer = Buyer(unique_id=self.next_id(), money_left=25, max_price=5, capacity=4, model=self)
+            seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
+                            min_price=5, model=self)
+            buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
             self.schedule.add(seller)
             self.schedule.add(buyer)
 

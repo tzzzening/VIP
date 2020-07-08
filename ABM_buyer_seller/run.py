@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from mesa.batchrunner import BatchRunner
 
 
-model = WasteModel(10, 1, 1)
+# model = WasteModel(10, 1, 1)
 # # model.schedule.print_lists()
 # print(model)
 # model.step()
@@ -19,10 +19,10 @@ model = WasteModel(10, 1, 1)
 
 # seller_goods = [s[2].goods_left for s in model.schedule.sellers]
 # plt.hist(seller_goods)
-buyer_money = [b[2].money_left for b in model.schedule.buyers]
+# buyer_money = [b[2].money_left for b in model.schedule.buyers]
 fixed_params = {'width': 1, 'height': 1}
 variable_params = {'num_per_agent': range(1, 2)}
-batch_run = BatchRunner(WasteModel, variable_params, fixed_params, iterations=5, max_steps=1)
+batch_run = BatchRunner(WasteModel, variable_params, fixed_params, iterations=1, max_steps=10)
 batch_run.run_all()
 
 # plt.hist(buyer_money)
