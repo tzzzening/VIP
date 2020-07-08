@@ -46,26 +46,32 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         while True:  # remember to exit loop
             print(i, j)
             seller = self.get_agent_from_list(i, 'Seller')
-            print("current seller:", seller)
+            #print("current seller:", seller)
             buyer = self.get_agent_from_list(i, 'Buyer')
-            print("current buyer:", buyer)
+            #print("current buyer:", buyer)
             seller_has_goods_left = seller.goods_left > 0
             buyer_has_enough_capacity = buyer.monthly_capacity > 0
 
             if not seller_has_goods_left:
                 print('Seller has no more waste')
+                print("current seller:", seller)
+                print("current buyer:", buyer)
                 if i == (self.seller_count - 1):
                     break
                 i += 1
                 continue
             if not buyer_has_enough_capacity:
                 print('Buyer doesn\'t have enough capacity')
+                print("current seller:", seller)
+                print("current buyer:", buyer)
                 if j == (self.buyer_count - 1):
                     break
                 j += 1
                 continue
             if seller.min_price <= buyer.max_price:
                 self.prepare_trade(seller, buyer)
+                print("current seller:", seller)
+                print("current buyer:", buyer)
 
                 if i == (self.seller_count - 1) or j == (self.buyer_count - 1):
                     break

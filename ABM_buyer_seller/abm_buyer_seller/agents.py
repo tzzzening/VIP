@@ -44,7 +44,6 @@ class Buyer(Agent):
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\
             .format(self.unique_id, self.monthly_capacity, self.max_price)
-        print('is matched?', self.is_matched)
         if self.is_matched:
             output += "Bought from seller {}.".format(self.seller.unique_id)
         return output
