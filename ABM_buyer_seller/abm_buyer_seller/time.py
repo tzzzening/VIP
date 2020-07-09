@@ -43,7 +43,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
 
         i = 0
         j = 0
-        while True:  # remember to exit loop
+        while True:
             print(i, j)
             seller = self.get_agent_from_list(i, 'Seller')
             #print("current seller:", seller)
@@ -113,10 +113,10 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
 
-    def get_agent_from_list(self, index, type) -> Agent:
-        if type == 'Seller':
+    def get_agent_from_list(self, index, agent_type) -> Agent:
+        if agent_type == 'Seller':
             return self.sellers[index][2]
-        assert type == 'Buyer', 'type is neither Buyer not Seller'
+        assert agent_type == 'Buyer', 'type is neither Buyer not Seller'
         return self.buyers[index][2]
 
 
