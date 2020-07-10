@@ -1,7 +1,14 @@
 from mesa import Agent
 
 
-class Seller(Agent):
+class WasteAgent(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.is_matched = False
+        self.trade_quantity = 0
+
+
+class Seller(WasteAgent):
     """
     A seller that ...
     """
@@ -10,8 +17,6 @@ class Seller(Agent):
         self.goods_left = monthly_waste_produced
         self.min_price = min_price
         self.buyer = None
-        self.is_matched = False
-        self.trade_quantity = None
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} waste produced, with min price of {}. "\
@@ -28,7 +33,7 @@ class Seller(Agent):
             self.sell()
 
 
-class Buyer(Agent):
+class Buyer(WasteAgent):
     """
     A buyer that ...
     """
@@ -37,9 +42,7 @@ class Buyer(Agent):
         self.monthly_capacity = monthly_capacity
         self.max_price = max_price
         self.seller = None
-        self.is_matched = False
-        self.cost = None
-        self.trade_quantity = None
+        self.cost = None  # i think this one also don't need
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\

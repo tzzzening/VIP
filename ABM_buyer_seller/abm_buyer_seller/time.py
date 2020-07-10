@@ -1,5 +1,6 @@
 from mesa.time import BaseScheduler
-from mesa.agent import Agent
+from mesa import Agent
+from abm_buyer_seller.agents import WasteAgent
 from abm_buyer_seller.agents import Buyer, Seller
 import bisect
 
@@ -22,7 +23,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             output += (i[2].__str__() + "\n")
         return output
 
-    def add(self, agent: Agent) -> None:
+    def add(self, agent: WasteAgent) -> None:
         self._agents[agent.unique_id] = agent
         if isinstance(agent, Seller):
             bisect.insort(self.sellers, (agent.min_price, agent.unique_id, agent))
@@ -39,9 +40,10 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         self.time += 1
 
     def match_agents(self) -> None:
+        # self.print_matched_state()
+        # self.initialise_agents()
         self.print_matched_state()
-        self.initialise_agents()
-        self.print_matched_state()
+        print()
         i = 0
         j = 0
         while True:

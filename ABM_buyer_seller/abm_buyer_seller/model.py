@@ -19,7 +19,7 @@ class WasteModel(Model):
         for i in range(num_per_agent):
             seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
                             min_price=5, model=self)
-            buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
+            buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
             self.schedule.add(seller)
             self.schedule.add(buyer)
 
