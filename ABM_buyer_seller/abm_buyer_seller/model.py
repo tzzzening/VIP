@@ -25,24 +25,13 @@ class WasteModel(Model):
 
         seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
         self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
         self.schedule.add(buyer)
         seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
         self.schedule.add(seller)
         buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
         self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
-        self.schedule.add(buyer)
+
 
         self.match_agents()
         print('match with who')
@@ -51,7 +40,7 @@ class WasteModel(Model):
 
     def step(self) -> None:
         self.num_steps += 1
-        print('steps', self.num_steps)
+        print('step', self.num_steps)
         self.schedule.step()
 
     def __str__(self) -> str:
@@ -102,6 +91,12 @@ class WasteModel(Model):
 
         cost = (seller.min_price + buyer.max_price) / 2
         buyer.cost = cost
+
+        seller_quantity = seller.monthly_waste_produced
+        buyer_quantity = buyer.monthly_capacity
+        trade_quantity = min(seller_quantity, buyer_quantity)
+        seller.trade_quantity = trade_quantity
+        buyer.trade_quantity = trade_quantity
         return
 
 
