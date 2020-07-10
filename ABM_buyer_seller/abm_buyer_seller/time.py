@@ -94,12 +94,6 @@ class BaseSchedulerMoneyModel(BaseScheduler):
     def buyer_count(self) -> int:
         return len(self.buyers)
 
-    def print_lists(self) -> None:
-        for i in self.sellers:
-            print(i)
-        for i in self.buyers:
-            print(i)
-
     @staticmethod
     def prepare_trade(seller, buyer) -> None:
         seller.buyer = buyer
