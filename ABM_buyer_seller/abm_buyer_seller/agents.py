@@ -33,8 +33,10 @@ class Seller(WasteAgent):
         self.waste_left = self.monthly_waste_produced
 
     def advance(self) -> None:
+        print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
         if self.is_matched:
             self.sell()
+        print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
 
 
 class Buyer(WasteAgent):
@@ -63,8 +65,10 @@ class Buyer(WasteAgent):
         self.capacity_left = self.monthly_capacity
 
     def advance(self) -> None:
+        print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
         if self.is_matched:
             self.buy()
+        print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
 
 
 
