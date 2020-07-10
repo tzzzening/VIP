@@ -1,5 +1,5 @@
 from mesa import Model
-from abm_buyer_seller.time import BaseSchedulerMoneyModel
+from abm_buyer_seller.time import SimultaneousActivationMoneyModel
 from abm_buyer_seller.agents import Seller, Buyer
 from mesa.space import MultiGrid
 
@@ -14,7 +14,7 @@ class WasteModel(Model):
         self.width = width
         self.height = height
         self.grid = MultiGrid(width, height, torus=False)
-        self.schedule = BaseSchedulerMoneyModel(self)
+        self.schedule = SimultaneousActivationMoneyModel(self)
         self.running = True
         for i in range(num_per_agent):
             seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
