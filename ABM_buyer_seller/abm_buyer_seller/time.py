@@ -39,8 +39,9 @@ class BaseSchedulerMoneyModel(BaseScheduler):
         self.time += 1
 
     def match_agents(self) -> None:
+        self.print_matched_state()
         self.initialise_agents()
-
+        self.print_matched_state()
         i = 0
         j = 0
         while True:
@@ -118,6 +119,18 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             return self.sellers[index][2]
         assert agent_type == 'Buyer', 'type is neither Buyer not Seller'
         return self.buyers[index][2]
+
+    def print_matched_state(self) -> None:  # useless method to be deleted
+        print('sellers matched state')
+        for i in range(len(self.sellers)):
+            seller = self.get_agent_from_list(i, 'Seller')
+            print(seller.unique_id, seller.is_matched)
+        print('buyers matched state')
+        for i in range(len(self.buyers)):
+            buyer = self.get_agent_from_list(i, 'Buyer')
+            print(buyer.unique_id, buyer.is_matched)
+
+
 
 
 
