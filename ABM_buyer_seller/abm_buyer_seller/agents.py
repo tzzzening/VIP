@@ -1,4 +1,5 @@
 from mesa import Agent
+import random
 
 
 class WasteAgent(Agent):
@@ -33,7 +34,11 @@ class Seller(WasteAgent):
         self.waste_left -= self.trade_quantity
 
     def step(self) -> None:
-        self.waste_left = self.monthly_waste_produced
+        """
+        Generate waste for the day.
+        """
+        self.waste_left = random.randint((self.monthly_waste_produced - 1), (self.monthly_waste_produced + 1))
+        #self.waste_left = 6
 
     def advance(self) -> None:
         print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))

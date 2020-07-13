@@ -9,7 +9,7 @@ class WasteModel(Model):
     num_steps = 0
     total_waste_produced = 0
     total_waste_traded = 0
-    total_waste_traded_per_step = 0
+    total_waste_traded_per_step = 0  # currently it's still the trade_quantity in the prepare_trade method
 
     def __init__(self, num_per_agent, width, height) -> None:
         super().__init__()
@@ -26,14 +26,16 @@ class WasteModel(Model):
             # self.schedule.add(seller)
             # self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
         self.schedule.add(seller)
         buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
         self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=60, model=self)
         self.schedule.add(seller)
         buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
         self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
+        self.schedule.add(seller)
 
         self.match_agents()
         print('match with who')
@@ -97,6 +99,7 @@ class WasteModel(Model):
         cost = (seller.min_price + buyer.max_price) / 2
         buyer.cost = cost
 
+        # this whole chunk will change to be in the step() method or sth
         seller_quantity = seller.monthly_waste_produced
         buyer_quantity = buyer.monthly_capacity
         trade_quantity = min(seller_quantity, buyer_quantity)
