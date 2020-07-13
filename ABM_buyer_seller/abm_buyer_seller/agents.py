@@ -6,6 +6,8 @@ class WasteAgent(Agent):
         super().__init__(unique_id, model)
         self.is_matched = False
         self.trade_quantity = 0
+        self.cost_to_change_capacity = 5  # assume that it is the same cost to increase or decrease capacity
+        self.days_taken_to_increase_capacity = 3
 
 
 class Seller(WasteAgent):
@@ -18,6 +20,7 @@ class Seller(WasteAgent):
         self.min_price = min_price
         self.buyer = None
         self.waste_left = monthly_waste_produced
+        self.cost_per_unit_waste_disposed = 2
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} waste produced, with min price of {}. "\
@@ -50,6 +53,7 @@ class Buyer(WasteAgent):
         self.seller = None
         self.cost = None  # i think this one also don't need. okay maybe not
         self.capacity_left = monthly_capacity
+        self.cost_per_unit_new_input = 10
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\
