@@ -2,6 +2,12 @@ from mesa import Model
 from abm_buyer_seller.time import SimultaneousActivationMoneyModel
 from abm_buyer_seller.agents import Seller, Buyer
 from mesa.space import MultiGrid
+from mesa.datacollection import DataCollector
+
+
+def compute_recycling_rate(model) -> float:
+    print('MODEL')
+    return model.total_waste_traded / model.total_waste_produced
 
 
 class WasteModel(Model):
@@ -38,9 +44,12 @@ class WasteModel(Model):
         self.schedule.add(seller)
 
         self.match_agents()
-        print('match with who')
-        for i in self.schedule.sellers:
-            print(i[2].unique_id, i[2].buyer)
+        # print('match with who')
+        # for i in self.schedule.sellers:
+        #     print(i[2].unique_id, i[2].buyer)
+        self.datacollector = DataCollector(
+            model_reporters={'Recycling_Rate': compute_recycling_rate},
+            agent_reporters=None)
 
     def step(self) -> None:
         print('before: produced {} trade {}'.format(self.total_waste_produced, self.total_waste_traded))
@@ -50,6 +59,7 @@ class WasteModel(Model):
         self.total_waste_produced = self.schedule.total_waste_produced
         self.total_waste_traded += self.total_waste_traded_per_step
         print('after: produced {} trade {}\n'.format(self.total_waste_produced, self.total_waste_traded))
+        self.datacollector.collect(self)
 
     def __str__(self) -> str:
         return "\nCurrent Status:\n" + self.schedule.__str__()  # to print in order of price
