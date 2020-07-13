@@ -22,7 +22,7 @@ from mesa.batchrunner import BatchRunner
 # buyer_money = [b[2].money_left for b in model.schedule.buyers]
 fixed_params = {'width': 1, 'height': 1}
 variable_params = {'num_per_agent': range(1, 2)}
-batch_run = BatchRunner(WasteModel, variable_params, fixed_params, iterations=1, max_steps=10)
+batch_run = BatchRunner(WasteModel, variable_params, fixed_params, iterations=1, max_steps=1)
 batch_run.run_all()
 
 # plt.hist(buyer_money)

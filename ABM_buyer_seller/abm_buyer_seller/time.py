@@ -10,6 +10,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     BaseScheduler class with added lists to store buyers and sellers separately.
     """
 
+    total_waste_produced = 0
+
     def __init__(self, model) -> None:
         super().__init__(model)
         self.sellers = []
@@ -38,6 +40,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         # self.match_agents()
         for agent in self.agent_buffer(shuffled=False):
             agent.step()
+            if isinstance(agent, Seller):
+                self.total_waste_produced += agent.waste_left
         for agent in self.agent_buffer(shuffled=False):
             agent.advance()
         self.steps += 1

@@ -7,6 +7,9 @@ from mesa.space import MultiGrid
 class WasteModel(Model):
 
     num_steps = 0
+    total_waste_produced = 0
+    total_waste_traded = 0
+    total_waste_traded_per_step = 0
 
     def __init__(self, num_per_agent, width, height) -> None:
         super().__init__()
@@ -32,16 +35,19 @@ class WasteModel(Model):
         buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
         self.schedule.add(buyer)
 
-
         self.match_agents()
         print('match with who')
         for i in self.schedule.sellers:
             print(i[2].unique_id, i[2].buyer)
 
     def step(self) -> None:
+        print('before: produced {} trade {}'.format(self.total_waste_produced, self.total_waste_traded))
         self.num_steps += 1
         print('step', self.num_steps)
         self.schedule.step()
+        self.total_waste_produced = self.schedule.total_waste_produced
+        self.total_waste_traded += self.total_waste_traded_per_step
+        print('after: produced {} trade {}\n'.format(self.total_waste_produced, self.total_waste_traded))
 
     def __str__(self) -> str:
         return "\nCurrent Status:\n" + self.schedule.__str__()  # to print in order of price
@@ -82,8 +88,7 @@ class WasteModel(Model):
     def buyer_count(self) -> int:
         return len(self.schedule.buyers)
 
-    @staticmethod
-    def prepare_trade(seller, buyer) -> None:
+    def prepare_trade(self, seller, buyer) -> None:
         seller.buyer = buyer
         buyer.seller = seller
         seller.is_matched = True
@@ -97,6 +102,7 @@ class WasteModel(Model):
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
+        self.total_waste_traded_per_step += trade_quantity
         return
 
 
