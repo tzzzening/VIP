@@ -1,10 +1,11 @@
-from mesa.time import BaseScheduler
-from mesa.agent import Agent
+from mesa.time import SimultaneousActivation
+from mesa import Agent
+from abm_buyer_seller.agents import WasteAgent
 from abm_buyer_seller.agents import Buyer, Seller
 import bisect
 
 
-class BaseSchedulerMoneyModel(BaseScheduler):
+class SimultaneousActivationMoneyModel(SimultaneousActivation):
     """
     BaseScheduler class with added lists to store buyers and sellers separately.
     """
@@ -22,7 +23,7 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             output += (i[2].__str__() + "\n")
         return output
 
-    def add(self, agent: Agent) -> None:
+    def add(self, agent: WasteAgent) -> None:
         self._agents[agent.unique_id] = agent
         if isinstance(agent, Seller):
             bisect.insort(self.sellers, (agent.min_price, agent.unique_id, agent))
@@ -32,103 +33,108 @@ class BaseSchedulerMoneyModel(BaseScheduler):
             raise Exception  # specify exception later, not sure about python exceptions
 
     def step(self) -> None:
-        self.match_agents()
+        # print('yoyoo')
+        # print(self.__str__())
+        # self.match_agents()
         for agent in self.agent_buffer(shuffled=False):
             agent.step()
+        for agent in self.agent_buffer(shuffled=False):
+            agent.advance()
         self.steps += 1
         self.time += 1
 
-    def match_agents(self) -> None:
-        self.print_matched_state()
-        self.initialise_agents()
-        self.print_matched_state()
-        i = 0
-        j = 0
-        while True:
-            print(i, j)
-            seller = self.get_agent_from_list(i, 'Seller')
-            #print("current seller:", seller)
-            buyer = self.get_agent_from_list(i, 'Buyer')
-            #print("current buyer:", buyer)
-            seller_has_goods_left = seller.goods_left > 0
-            buyer_has_enough_capacity = buyer.monthly_capacity > 0
-
-            if not seller_has_goods_left:
-                print('Seller has no more waste')
-                print("current seller:", seller)
-                print("current buyer:", buyer)
-                if i == (self.seller_count - 1):
-                    break
-                i += 1
-                continue
-            if not buyer_has_enough_capacity:
-                print('Buyer doesn\'t have enough capacity')
-                print("current seller:", seller)
-                print("current buyer:", buyer)
-                if j == (self.buyer_count - 1):
-                    break
-                j += 1
-                continue
-            if seller.min_price <= buyer.max_price:
-                self.prepare_trade(seller, buyer)
-                print("current seller:", seller)
-                print("current buyer:", buyer)
-
-                if i == (self.seller_count - 1) or j == (self.buyer_count - 1):
-                    break
-                i += 1
-                j += 1
-
-    def initialise_agents(self) -> None:  # seems super inefficient though
-        """ Resets the is_matched variable of all agents to False"""
-        for agent in self.agents:
-            agent.is_matched = False
-
-    @property
-    def seller_count(self) -> int:
-        return len(self.sellers)
-
-    @property
-    def buyer_count(self) -> int:
-        return len(self.buyers)
-
-    def print_lists(self) -> None:
-        for i in self.sellers:
-            print(i)
-        for i in self.buyers:
-            print(i)
-
-    @staticmethod
-    def prepare_trade(seller, buyer) -> None:
-        seller.buyer = buyer
-        buyer.seller = seller
-        seller.is_matched = True
-        buyer.is_matched = True
-
-        cost = (seller.min_price + buyer.max_price) / 2
-        buyer.cost = cost
-
-        seller_quantity = seller.goods_left
-        buyer_quantity = buyer.monthly_capacity
-        trade_quantity = min(seller_quantity, buyer_quantity)
-        seller.trade_quantity = trade_quantity
-        buyer.trade_quantity = trade_quantity
-
-    def get_agent_from_list(self, index, agent_type) -> Agent:
-        if agent_type == 'Seller':
-            return self.sellers[index][2]
-        assert agent_type == 'Buyer', 'type is neither Buyer not Seller'
-        return self.buyers[index][2]
-
-    def print_matched_state(self) -> None:  # useless method to be deleted
-        print('sellers matched state')
-        for i in range(len(self.sellers)):
-            seller = self.get_agent_from_list(i, 'Seller')
-            print(seller.unique_id, seller.is_matched)
-        print('buyers matched state')
-        for i in range(len(self.buyers)):
-            buyer = self.get_agent_from_list(i, 'Buyer')
-            print(buyer.unique_id, buyer.is_matched)
+    # def match_agents(self) -> None:
+    #     # self.print_matched_state()
+    #     self.initialise_agents()
+    #     self.print_matched_state()
+    #     print()
+    #     i = 0
+    #     j = 0
+    #     while True:
+    #         print(i, j)
+    #         seller = self.get_seller_from_list(i)
+    #         #print("current seller:", seller)
+    #         buyer = self.get_buyer_from_list(i)
+    #         #print("current buyer:", buyer)
+    #         seller_has_waste_left = seller.waste_left > 0
+    #         buyer_has_enough_capacity = buyer.capacity_left > 0
+    #
+    #         if not seller_has_waste_left:
+    #             print('Seller has no more waste')
+    #             print("current seller:", seller)
+    #             print("current buyer:", buyer)
+    #             if i == (self.seller_count - 1):
+    #                 break
+    #             i += 1
+    #             continue
+    #         if not buyer_has_enough_capacity:
+    #             print('Buyer doesn\'t have enough capacity')
+    #             print("current seller:", seller)
+    #             print("current buyer:", buyer)
+    #             if j == (self.buyer_count - 1):
+    #                 break
+    #             j += 1
+    #             continue
+    #         if seller.min_price <= buyer.max_price:
+    #             self.prepare_trade(seller, buyer)
+    #             print("current seller:", seller)
+    #             print("current buyer:", buyer)
+    #
+    #             if i == (self.seller_count - 1) or j == (self.buyer_count - 1):
+    #                 break
+    #             i += 1
+    #             j += 1
+    #
+    # def initialise_agents(self) -> None:  # seems super inefficient though
+    #     """ Resets the is_matched variable of all agents to False"""
+    #     for agent in self.agents:
+    #         agent.trade_quantity = 0
+    #
+    # @property
+    # def seller_count(self) -> int:
+    #     return len(self.sellers)
+    #
+    # @property
+    # def buyer_count(self) -> int:
+    #     return len(self.buyers)
+    #
+    # @staticmethod
+    # def prepare_trade(seller, buyer) -> None:
+    #     seller.buyer = buyer
+    #     buyer.seller = seller
+    #     seller.is_matched = True
+    #     buyer.is_matched = True
+    #
+    #     cost = (seller.min_price + buyer.max_price) / 2
+    #     buyer.cost = cost
+    #
+    #     seller_quantity = seller.monthly_waste_produced
+    #     buyer_quantity = buyer.monthly_capacity
+    #     trade_quantity = min(seller_quantity, buyer_quantity)
+    #     seller.trade_quantity = trade_quantity
+    #     buyer.trade_quantity = trade_quantity
+    #
+    # # def get_agent_from_list(self, index, agent_type) -> Agent:
+    # #     if agent_type == 'Seller':
+    # #         return self.sellers[index][2]
+    # #     assert agent_type == 'Buyer', 'type is neither Buyer not Seller'
+    # #     return self.buyers[index][2]
+    #
+    # def get_seller_from_list(self, index) -> Seller:
+    #     return self.sellers[index][2]
+    #
+    # def get_buyer_from_list(self, index) -> Buyer:
+    #     return self.buyers[index][2]
+    #
+    # def print_matched_state(self) -> None:  # useless method to be deleted
+    #     print('sellers matched state')
+    #     for i in range(len(self.sellers)):
+    #         seller = self.get_seller_from_list(i)
+    #         print(seller.unique_id, seller.is_matched)
+    #     print('buyers matched state')
+    #     for i in range(len(self.buyers)):
+    #         buyer = self.get_buyer_from_list(i)
+    #         print(buyer.unique_id, buyer.is_matched)
 
 
 
