@@ -17,29 +17,32 @@ class WasteModel(Model):
     total_waste_traded = 0
     total_waste_traded_per_step = 0  # currently it's still the trade_quantity in the prepare_trade method
 
-    def __init__(self, num_per_agent, width, height) -> None:
+    def __init__(self, seller_num, buyer_num, width, height) -> None:
         super().__init__()
-        self.num_per_agent = num_per_agent
+        self.seller_num = seller_num
+        self.buyer_num = buyer_num
         self.width = width
         self.height = height
         self.grid = MultiGrid(width, height, torus=False)
         self.schedule = SimultaneousActivationMoneyModel(self)
         self.running = True
-        # for i in range(num_per_agent):
-        #     seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
-        #                     min_price=5, model=self)
-        #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
-        #     self.schedule.add(seller)
-        #     self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
-        self.schedule.add(buyer)
+        for i in range(seller_num):
+            seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
+                            min_price=5, model=self)
+            self.schedule.add(seller)
+        for i in range(buyer_num):
+            buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+            self.schedule.add(buyer)
+
+        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        # self.schedule.add(seller)
+        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+        # self.schedule.add(buyer)
+        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
+        # self.schedule.add(seller)
+        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
+        # self.schedule.add(buyer)
 
         self.match_agents()
         # print('match with who')
@@ -75,13 +78,13 @@ class WasteModel(Model):
             buyer = self.get_buyer_from_list(j)
             # print(buyer.unique_id)
             if seller.min_price > buyer.max_price:
-                if j == (self.buyer_count - 1):
+                if j == (self.buyer_num - 1):
                     break
                 j += 1
                 continue
 
             self.prepare_trade(seller, buyer)
-            if i == (self.seller_count - 1) or j == (self.buyer_count - 1):
+            if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
                 break
             i += 1
             j += 1
@@ -93,13 +96,13 @@ class WasteModel(Model):
     def get_buyer_from_list(self, index) -> Buyer:
         return self.schedule.buyers[index][2]
 
-    @property
-    def seller_count(self) -> int:
-        return len(self.schedule.sellers)
-
-    @property
-    def buyer_count(self) -> int:
-        return len(self.schedule.buyers)
+    # @property
+    # def seller_count(self) -> int:
+    #     return len(self.schedule.sellers)
+    #
+    # @property
+    # def buyer_count(self) -> int:
+    #     return len(self.schedule.buyers)
 
     def prepare_trade(self, seller, buyer) -> None:
         """

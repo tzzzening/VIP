@@ -1,5 +1,6 @@
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import ChartModule
+from mesa.visualization.UserParam import UserSettableParameter
 from abm_buyer_seller.model import WasteModel
 
 
@@ -7,10 +8,11 @@ chart = ChartModule([{'Label': 'Recycling_Rate',
                       'Color': 'Black'}],
                     data_collector_name='data_collector')
 
-server = ModularServer(WasteModel,
-                       [chart],
+server = ModularServer(WasteModel, [chart],
                        'Waste Model',
-                       {'num_per_agent': 1, 'width': 1, 'height': 1})
+                       {'seller_num': UserSettableParameter('slider', 'Number of sellers', 3, 1, 10),
+                        'buyer_num': UserSettableParameter('slider', 'Number of buyers', 3, 1, 10),
+                        'width': 1, 'height': 1})
 server.port = 8521
 # server.launch()
 
