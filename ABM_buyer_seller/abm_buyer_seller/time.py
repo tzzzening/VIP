@@ -7,7 +7,7 @@ import bisect
 
 class SimultaneousActivationMoneyModel(SimultaneousActivation):
     """
-    BaseScheduler class with added lists to store buyers and sellers separately.
+    SimultaneousActivation class with added lists to store buyers and sellers separately.
     """
 
     total_waste_produced = 0
