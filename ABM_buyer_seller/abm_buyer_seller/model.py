@@ -26,45 +26,46 @@ class WasteModel(Model):
         self.schedule = SimultaneousActivationMoneyModel(self)
         self.running = True
         # for i in range(num_per_agent):
-            # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
-            #                 min_price=5, model=self)
-            # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
-            # self.schedule.add(seller)
-            # self.schedule.add(buyer)
+        #     seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
+        #                     min_price=5, model=self)
+        #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+        #     self.schedule.add(seller)
+        #     self.schedule.add(buyer)
 
         seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
         self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=60, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
         self.schedule.add(buyer)
         seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
         self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
+        self.schedule.add(buyer)
 
         self.match_agents()
         # print('match with who')
         # for i in self.schedule.sellers:
         #     print(i[2].unique_id, i[2].buyer)
-        self.datacollector = DataCollector(
+        self.data_collector = DataCollector(
             model_reporters={'Recycling_Rate': compute_recycling_rate},
             agent_reporters=None)
 
     def step(self) -> None:
-        print('before: produced {} trade {}'.format(self.total_waste_produced, self.total_waste_traded))
+        print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
         self.num_steps += 1
         print('step', self.num_steps)
         self.schedule.step()
         self.total_waste_produced = self.schedule.total_waste_produced
-        self.total_waste_traded += self.total_waste_traded_per_step
-        print('after: produced {} trade {}\n'.format(self.total_waste_produced, self.total_waste_traded))
-        self.datacollector.collect(self)
+        self.total_waste_traded = self.schedule.total_waste_traded
+        print('after: produced {} traded {}\n'.format(self.total_waste_produced, self.total_waste_traded))
+        self.data_collector.collect(self)
 
     def __str__(self) -> str:
         return "\nCurrent Status:\n" + self.schedule.__str__()  # to print in order of price
 
     def match_agents(self) -> None:
+        """
+        Match agents according to minimum price of the seller and the maximum price of the buyer.
+        """
         i = 0
         j = 0
         while True:
@@ -101,6 +102,11 @@ class WasteModel(Model):
         return len(self.schedule.buyers)
 
     def prepare_trade(self, seller, buyer) -> None:
+        """
+        Update the trading partners and the cost per unit waste of each agent.
+        :param seller:
+        :param buyer:
+        """
         seller.buyer = buyer
         buyer.seller = seller
         seller.is_matched = True
@@ -110,12 +116,12 @@ class WasteModel(Model):
         buyer.cost = cost
 
         # this whole chunk will change to be in the step() method or sth
-        seller_quantity = seller.monthly_waste_produced
-        buyer_quantity = buyer.monthly_capacity
-        trade_quantity = min(seller_quantity, buyer_quantity)
-        seller.trade_quantity = trade_quantity
-        buyer.trade_quantity = trade_quantity
-        self.total_waste_traded_per_step += trade_quantity
+        # seller_quantity = seller.monthly_waste_produced
+        # buyer_quantity = buyer.monthly_capacity
+        # trade_quantity = min(seller_quantity, buyer_quantity)
+        # seller.trade_quantity = trade_quantity
+        # buyer.trade_quantity = trade_quantity
+        # self.total_waste_traded_per_step += trade_quantity
         return
 
 

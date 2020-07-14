@@ -4,7 +4,9 @@ import numpy as np
 from time import time
 import matplotlib.pyplot as plt
 from mesa.batchrunner import BatchRunner
+from abm_buyer_seller.server import server
 
+server.launch()
 
 # model = WasteModel(10, 1, 1)
 # # model.schedule.print_lists()
@@ -21,20 +23,37 @@ from mesa.batchrunner import BatchRunner
 # plt.hist(seller_goods)
 # buyer_money = [b[2].money_left for b in model.schedule.buyers]
 
-def compute_recycling_rate(model) -> float:
-    print('RUN')
-    return model.total_waste_traded / model.total_waste_produced
 
 
-fixed_params = {'width': 1, 'height': 1}
-variable_params = {'num_per_agent': range(1, 2)}
-batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
-                        iterations=1, max_steps=2, model_reporters={'Recycling_Rate': compute_recycling_rate})
-batch_run.run_all()
-run_data = batch_run.get_model_vars_dataframe()
-run_data.head()
-plt.scatter([1], run_data.Recycling_Rate)
-plt.show()
+
+
+
+# def compute_recycling_rate(model) -> float:
+#     print('RUN')
+#     return model.total_waste_traded / model.total_waste_produced
+#
+#
+# fixed_params = {'width': 1, 'height': 1}
+# variable_params = {'num_per_agent': range(1, 2)}
+# batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
+#                         iterations=2, max_steps=3, model_reporters={'Recycling_Rate': compute_recycling_rate})
+# batch_run.run_all()
+# run_data = batch_run.get_model_vars_dataframe()
+# run_data.head()
+# plt.scatter([1, 2], run_data.Recycling_Rate)
+# plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
 
 # plt.hist(buyer_money)
 # plt.show()
