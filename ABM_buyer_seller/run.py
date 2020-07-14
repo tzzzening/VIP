@@ -29,11 +29,11 @@ def compute_recycling_rate(model) -> float:
 fixed_params = {'width': 1, 'height': 1}
 variable_params = {'num_per_agent': range(1, 2)}
 batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
-                        iterations=1, max_steps=2, model_reporters={'Recycling_Rate': compute_recycling_rate})
+                        iterations=5, max_steps=1, model_reporters={'Recycling_Rate': compute_recycling_rate})
 batch_run.run_all()
 run_data = batch_run.get_model_vars_dataframe()
 run_data.head()
-plt.scatter([1], run_data.Recycling_Rate)
+plt.scatter([1, 2, 3, 4, 5], run_data.Recycling_Rate)
 plt.show()
 
 # plt.hist(buyer_money)

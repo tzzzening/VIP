@@ -11,6 +11,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     """
 
     total_waste_produced = 0
+    total_waste_traded = 0
 
     def __init__(self, model) -> None:
         super().__init__(model)
@@ -38,14 +39,50 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         # print('yoyoo')
         # print(self.__str__())
         # self.match_agents()
-        for agent in self.agent_buffer(shuffled=False):
+        for agent in self.agent_buffer(shuffled=False):  # maybe can come back and check this buffer thing
             agent.step()
             if isinstance(agent, Seller):
                 self.total_waste_produced += agent.waste_left
+                if agent.is_matched:
+                    self.set_trade_quantity(agent)
+
         for agent in self.agent_buffer(shuffled=False):
             agent.advance()
         self.steps += 1
         self.time += 1
+
+    def set_trade_quantity(self, seller) -> None:
+        buyer = seller.buyer
+        seller_quantity = seller.waste_left
+        buyer_quantity = buyer.monthly_capacity
+        trade_quantity = min(seller_quantity, buyer_quantity)
+        seller.trade_quantity = trade_quantity
+        buyer.trade_quantity = trade_quantity
+        self.total_waste_traded += trade_quantity
+        return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # def match_agents(self) -> None:
     #     # self.print_matched_state()
