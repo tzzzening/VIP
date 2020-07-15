@@ -15,7 +15,7 @@ class WasteModel(Model):
     num_steps = 0
     total_waste_produced = 0
     total_waste_traded = 0
-    total_waste_traded_per_step = 0  # currently it's still the trade_quantity in the prepare_trade method
+    # total_waste_traded_per_step = 0
 
     def __init__(self, seller_num, buyer_num, width, height) -> None:
         super().__init__()
@@ -27,18 +27,18 @@ class WasteModel(Model):
         self.schedule = SimultaneousActivationMoneyModel(self)
         self.running = True
 
-        for i in range(seller_num):
-            seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
-                            min_price=5, model=self)
-            self.schedule.add(seller)
-        for i in range(buyer_num):
-            buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
-            self.schedule.add(buyer)
+        # for i in range(seller_num):
+        #     seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
+        #                     min_price=5, model=self)
+        #     self.schedule.add(seller)
+        # for i in range(buyer_num):
+        #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+        #     self.schedule.add(buyer)
 
-        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
-        # self.schedule.add(seller)
-        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
-        # self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+        self.schedule.add(buyer)
         # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
         # self.schedule.add(seller)
         # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
