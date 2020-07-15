@@ -70,16 +70,30 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                 seller.waste_left * seller.cost_per_unit_waste_disposed
             if seller.is_matched:
                 self.set_trade_quantity(seller)
+                cost = (seller.waste_left - seller.trade_quantity) * \
+                    seller.cost_per_unit_waste_disposed - \
+                    seller.trade_quantity * seller.trade_cost
+                self.total_cost_with_trading_seller += cost
+            else:
+                self.total_cost_with_trading_seller += \
+                    seller.waste_left * seller.cost_per_unit_waste_disposed
 
         for i in range(len(self.buyers)):
             buyer = self.get_buyer_from_list(i)
             buyer.step()
+            self.total_cost_without_trading_buyer += \
+                buyer.input * buyer.cost_per_new_input
+            if buyer.is_matched:
+                cost = (buyer.input - buyer.trade_quantity) * \
+                    buyer.cost_per_new_input + \
+                    buyer.trade_quantity * buyer.trade_cost
+                self.total_cost_with_trading_buyer += cost
+            else:
+                self.total_cost_with_trading_buyer += \
+                    buyer.input * buyer.cost_per_new_input
 
         for agent in self.agent_buffer(shuffled=False):
             agent.advance()
-
-
-
 
         self.steps += 1
         self.time += 1

@@ -10,12 +10,35 @@ def compute_recycling_rate(model) -> float:
     return model.total_waste_traded / model.total_waste_produced
 
 
+def compute_costs_savings_seller(model) -> float:
+    money_saved = model.total_cost_without_trading_seller - model.total_cost_with_trading_seller
+    return money_saved / model.total_cost_without_trading_seller
+
+
+def compute_costs_savings_buyer(model) -> float:
+    money_saved = model.total_cost_without_trading_buyer - model.total_cost_with_trading_buyer
+    return money_saved / model.total_cost_without_trading_buyer
+
+
+def compute_costs_savings(model) -> float:
+    total_costs_without_trading = \
+        model.total_cost_without_trading_seller + model.total_cost_without_trading_buyer
+    total_costs_with_trading = \
+        model.total_cost_with_trading_seller + model.total_cost_with_trading_buyer
+    money_saved = total_costs_without_trading - total_costs_with_trading
+    return money_saved / total_costs_without_trading
+
+
 class WasteModel(Model):
 
     num_steps = 0
     total_waste_produced = 0
     total_waste_traded = 0
     # total_waste_traded_per_step = 0
+    total_cost_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_cost_with_trading_seller = 0
+    total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_cost_with_trading_buyer = 0
 
     def __init__(self, seller_num, buyer_num, width, height) -> None:
         super().__init__()
@@ -49,17 +72,31 @@ class WasteModel(Model):
         # for i in self.schedule.sellers:
         #     print(i[2].unique_id, i[2].buyer)
         self.data_collector = DataCollector(
-            model_reporters={'Recycling_Rate': compute_recycling_rate},
+            model_reporters={'Recycling_Rate': compute_recycling_rate,
+                             'Costs_Savings_Seller': compute_costs_savings_seller,
+                             'Costs_Savings_Buyer': compute_costs_savings_buyer,
+                             'Costs_Savings_Overall': compute_costs_savings},
             agent_reporters=None)
 
     def step(self) -> None:
         print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        print('seller costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+        print('buyer costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+        # print('overall costs savings: trade {} no {}'.
+        #       format(self.total_cost_with_trading, self.total_cost_without_trading))
+
         self.num_steps += 1
         print('step', self.num_steps)
         self.schedule.step()
         self.total_waste_produced = self.schedule.total_waste_produced
         self.total_waste_traded = self.schedule.total_waste_traded
-        print('after: produced {} traded {}\n'.format(self.total_waste_produced, self.total_waste_traded))
+        self.total_cost_without_trading_seller = self.schedule.total_cost_without_trading_seller
+        self.total_cost_with_trading_seller = self.schedule.total_cost_with_trading_seller
+        self.total_cost_without_trading_buyer = self.schedule.total_cost_without_trading_buyer
+        self.total_cost_with_trading_buyer = self.schedule.total_cost_with_trading_buyer
+        # print('after: produced {} traded {}\n'.format(self.total_waste_produced, self.total_waste_traded))
         self.data_collector.collect(self)
 
     def __str__(self) -> str:
@@ -104,27 +141,22 @@ class WasteModel(Model):
     # def buyer_count(self) -> int:
     #     return len(self.schedule.buyers)
 
-    def prepare_trade(self, seller, buyer) -> None:
+    @staticmethod
+    def prepare_trade( seller, buyer) -> None:
         """
         Update the trading partners and the cost per unit waste of each agent.
         :param seller:
         :param buyer:
         """
+
         seller.buyer = buyer
         buyer.seller = seller
         seller.is_matched = True
         buyer.is_matched = True
 
         cost = (seller.min_price + buyer.max_price) / 2
-        buyer.cost = cost
-
-        # this whole chunk will change to be in the step() method or sth
-        # seller_quantity = seller.monthly_waste_produced
-        # buyer_quantity = buyer.monthly_capacity
-        # trade_quantity = min(seller_quantity, buyer_quantity)
-        # seller.trade_quantity = trade_quantity
-        # buyer.trade_quantity = trade_quantity
-        # self.total_waste_traded_per_step += trade_quantity
+        seller.trade_cost = cost
+        buyer.trade_cost = cost
         return
 
 
