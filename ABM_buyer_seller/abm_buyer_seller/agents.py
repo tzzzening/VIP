@@ -22,6 +22,7 @@ class Seller(WasteAgent):
         self.buyer = None
         self.waste_left = monthly_waste_produced
         self.cost_per_unit_waste_disposed = 2
+        self.trade_cost = 0
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} waste produced, with min price of {}. "\
@@ -56,9 +57,10 @@ class Buyer(WasteAgent):
         self.monthly_capacity = monthly_capacity
         self.max_price = max_price
         self.seller = None
-        self.cost = None  # i think this one also don't need. okay maybe not
+        self.trade_cost = None  # i think this one also don't need. okay maybe not
         self.capacity_left = monthly_capacity
-        self.cost_per_unit_new_input = 10
+        self.cost_per_new_input = 10
+        self.input = 10
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\

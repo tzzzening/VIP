@@ -13,6 +13,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     total_waste_produced = 0
     total_waste_traded = 0
 
+    total_cost_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_cost_with_trading_seller = 0
+    total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_cost_with_trading_buyer = 0
+
     def __init__(self, model) -> None:
         super().__init__(model)
         self.sellers = []
@@ -36,18 +41,42 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             raise Exception  # specify exception later, not sure about python exceptions
 
     def step(self) -> None:
+        """
+        Executes the step of all agents.
+        After which, updates the class variables for recycling rate and cost savings calculation.
+        Finally, execues the advance of all agents.
+        """
         # print('yoyoo')
         # print(self.__str__())
         # self.match_agents()
-        for agent in self.agent_buffer(shuffled=False):  # maybe can come back and check this buffer thing
-            agent.step()
-            if isinstance(agent, Seller):
-                self.total_waste_produced += agent.waste_left
-                if agent.is_matched:
-                    self.set_trade_quantity(agent)
+        # for agent in self.agent_buffer(shuffled=False):
+        #     # maybe can come back and check this buffer thing and try to change it to a WasteAgent
+        #     agent.step()
+        #     if isinstance(agent, Seller):
+        #         self.total_waste_produced += agent.waste_left
+        #         self.total_cost_without_trading_seller += \
+        #             agent.waste_left * agent.cost_per_unit_waste_disposed
+        #         if agent.is_matched:
+        #             self.set_trade_quantity(agent)
+        #
+        # for agent in self.agent_buffer(shuffled=False):
+        #     agent.advance()
+        # here
+        for i in range(len(self.sellers)):
+        # for i in range(2):
+            seller = self.get_seller_from_list(i)
+            seller.step()
+            self.update_class_variables_seller(seller)
+
+        for i in range(len(self.buyers)):
+        # for i in range(2):
+            buyer = self.get_buyer_from_list(i)
+            buyer.step()
+            self.update_class_variables_buyer(buyer)
 
         for agent in self.agent_buffer(shuffled=False):
             agent.advance()
+
         self.steps += 1
         self.time += 1
 
@@ -59,6 +88,40 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
         self.total_waste_traded += trade_quantity
+        return
+
+    def get_seller_from_list(self, index) -> Seller:
+        return self.sellers[index][2]
+
+    def get_buyer_from_list(self, index) -> Buyer:
+        return self.buyers[index][2]
+
+    def update_class_variables_seller(self, seller) -> None:
+        self.total_waste_produced += seller.waste_left
+        self.total_cost_without_trading_seller += \
+            seller.waste_left * seller.cost_per_unit_waste_disposed
+        if seller.is_matched:
+            self.set_trade_quantity(seller)
+            cost = (seller.waste_left - seller.trade_quantity) * \
+                seller.cost_per_unit_waste_disposed - \
+                seller.trade_quantity * seller.trade_cost
+            self.total_cost_with_trading_seller += cost
+        else:
+            self.total_cost_with_trading_seller += \
+                seller.waste_left * seller.cost_per_unit_waste_disposed
+        return
+
+    def update_class_variables_buyer(self, buyer) -> None:
+        self.total_cost_without_trading_buyer += \
+            buyer.input * buyer.cost_per_new_input
+        if buyer.is_matched:
+            cost = (buyer.input - buyer.trade_quantity) * \
+                buyer.cost_per_new_input + \
+                buyer.trade_quantity * buyer.trade_cost
+            self.total_cost_with_trading_buyer += cost
+        else:
+            self.total_cost_with_trading_buyer += \
+                buyer.input * buyer.cost_per_new_input
         return
 
 
