@@ -63,6 +63,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         #     agent.advance()
         # here
         for i in range(len(self.sellers)):
+        # for i in range(2):
             seller = self.get_seller_from_list(i)
             seller.step()
             self.total_waste_produced += seller.waste_left
@@ -79,6 +80,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                     seller.waste_left * seller.cost_per_unit_waste_disposed
 
         for i in range(len(self.buyers)):
+        # for i in range(2):
             buyer = self.get_buyer_from_list(i)
             buyer.step()
             self.total_cost_without_trading_buyer += \

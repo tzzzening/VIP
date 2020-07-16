@@ -60,12 +60,12 @@ class WasteModel(Model):
 
         seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
         self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
         self.schedule.add(buyer)
-        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=6, model=self)
-        # self.schedule.add(seller)
-        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=7, model=self)
-        # self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
+        self.schedule.add(buyer)
 
         self.match_agents()
         # print('match with who')
@@ -80,9 +80,9 @@ class WasteModel(Model):
 
     def step(self) -> None:
         print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        print('seller costs savings: trade {} no {}'.
+        print('before seller costs savings: trade {} no {}'.
               format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
-        print('buyer costs savings: trade {} no {}'.
+        print('before buyer costs savings: trade {} no {}'.
               format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
         # print('overall costs savings: trade {} no {}'.
         #       format(self.total_cost_with_trading, self.total_cost_without_trading))
@@ -96,7 +96,14 @@ class WasteModel(Model):
         self.total_cost_with_trading_seller = self.schedule.total_cost_with_trading_seller
         self.total_cost_without_trading_buyer = self.schedule.total_cost_without_trading_buyer
         self.total_cost_with_trading_buyer = self.schedule.total_cost_with_trading_buyer
-        # print('after: produced {} traded {}\n'.format(self.total_waste_produced, self.total_waste_traded))
+        print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        print('after seller costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+        print('after buyer costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+        print('seller saving', compute_costs_savings_seller(self))
+        print('buyer saving', compute_costs_savings_buyer(self))
+        print('overall saving', compute_costs_savings(self))
         self.data_collector.collect(self)
 
     def __str__(self) -> str:
@@ -122,6 +129,7 @@ class WasteModel(Model):
 
             self.prepare_trade(seller, buyer)
             if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
+            # if i == 1 or j == 1:
                 break
             i += 1
             j += 1
