@@ -4,14 +4,13 @@ from mesa.visualization.UserParam import UserSettableParameter
 from abm_buyer_seller.model import WasteModel
 
 
-recycling_rate_chart = ChartModule([{'Label': 'Recycling_Rate', 'Color': 'Black'},
-                                    {'Label': 'Seller_Savings', 'Color': 'Blue'},
-                                    {'Label': 'Buyer_Savings', 'Color': 'Red'},
-                                    {'Label': 'Overall_Savings', 'Color': 'Green'}],
-                                   data_collector_name='data_collector')
-# seller_savings_chart = ChartModule([{'Label': 'Costs_Savings_Seller', 'Color': 'Black'}])
+chart = ChartModule([{'Label': 'Recycling_Rate', 'Color': 'Black'},
+                     {'Label': 'Seller_Savings', 'Color': 'Blue'},
+                     {'Label': 'Buyer_Savings', 'Color': 'Red'},
+                     {'Label': 'Overall_Savings', 'Color': 'Green'}],
+                    data_collector_name='data_collector')
 
-server = ModularServer(WasteModel, [recycling_rate_chart],
+server = ModularServer(WasteModel, [chart],
                        'Waste Model',
                        {'seller_num': UserSettableParameter('slider', 'Number of sellers', 3, 1, 10),
                         'buyer_num': UserSettableParameter('slider', 'Number of buyers', 3, 1, 10),
