@@ -60,21 +60,3 @@ server.launch()
 # plt.scatter(plot_list, run_data.Overall_Savings)
 # plt.show()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# plt.hist(buyer_money)
-# plt.show()
-
-
-

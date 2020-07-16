@@ -103,8 +103,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         if seller.is_matched:
             self.set_trade_quantity(seller)
             cost = (seller.waste_left - seller.trade_quantity) * \
-                   seller.cost_per_unit_waste_disposed - \
-                   seller.trade_quantity * seller.trade_cost
+                seller.cost_per_unit_waste_disposed - \
+                seller.trade_quantity * seller.trade_cost
             self.total_cost_with_trading_seller += cost
         else:
             self.total_cost_with_trading_seller += \
@@ -116,8 +116,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             buyer.input * buyer.cost_per_new_input
         if buyer.is_matched:
             cost = (buyer.input - buyer.trade_quantity) * \
-                   buyer.cost_per_new_input + \
-                   buyer.trade_quantity * buyer.trade_cost
+                buyer.cost_per_new_input + \
+                buyer.trade_quantity * buyer.trade_cost
             self.total_cost_with_trading_buyer += cost
         else:
             self.total_cost_with_trading_buyer += \
