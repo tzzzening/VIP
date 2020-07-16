@@ -73,9 +73,9 @@ class WasteModel(Model):
         #     print(i[2].unique_id, i[2].buyer)
         self.data_collector = DataCollector(
             model_reporters={'Recycling_Rate': compute_recycling_rate,
-                             'Costs_Savings_Seller': compute_costs_savings_seller,
-                             'Costs_Savings_Buyer': compute_costs_savings_buyer,
-                             'Costs_Savings_Overall': compute_costs_savings},
+                             'Seller_Savings': compute_costs_savings_seller,
+                             'Buyer_Savings': compute_costs_savings_buyer,
+                             'Overall_Savings': compute_costs_savings},
             agent_reporters=None)
 
     def step(self) -> None:

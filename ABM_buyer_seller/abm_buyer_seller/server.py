@@ -5,9 +5,9 @@ from abm_buyer_seller.model import WasteModel
 
 
 recycling_rate_chart = ChartModule([{'Label': 'Recycling_Rate', 'Color': 'Black'},
-                                    {'Label': 'Costs_Savings_Seller', 'Color': 'Blue'},
-                                    {'Label': 'Costs_Savings_Buyer', 'Color': 'Red'},
-                                    {'Label': 'Costs_Savings_Overall', 'Color': 'Green'}],
+                                    {'Label': 'Seller_Savings', 'Color': 'Blue'},
+                                    {'Label': 'Buyer_Savings', 'Color': 'Red'},
+                                    {'Label': 'Overall_Savings', 'Color': 'Green'}],
                                    data_collector_name='data_collector')
 # seller_savings_chart = ChartModule([{'Label': 'Costs_Savings_Seller', 'Color': 'Black'}])
 
