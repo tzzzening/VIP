@@ -50,22 +50,22 @@ class WasteModel(Model):
         self.schedule = SimultaneousActivationMoneyModel(self)
         self.running = True
 
-        # for i in range(seller_num):
-        #     seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
-        #                     min_price=5, model=self)
-        #     self.schedule.add(seller)
-        # for i in range(buyer_num):
-        #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
-        #     self.schedule.add(buyer)
+        for i in range(seller_num):
+            seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
+                            min_price=5, model=self)
+            self.schedule.add(seller)
+        for i in range(buyer_num):
+            buyer = Buyer(unique_id=self.next_id(), monthly_capacity=20, max_price=5, model=self)
+            self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
-        self.schedule.add(buyer)
+        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        # self.schedule.add(seller)
+        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
+        # self.schedule.add(buyer)
+        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        # self.schedule.add(seller)
+        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
+        # self.schedule.add(buyer)
 
         self.match_agents()
         # print('match with who')
