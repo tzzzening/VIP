@@ -10,17 +10,17 @@ def compute_recycling_rate(model) -> float:
     return model.total_waste_traded / model.total_waste_produced
 
 
-def compute_costs_savings_seller(model) -> float:
+def compute_seller_savings(model) -> float:
     money_saved = model.total_cost_without_trading_seller - model.total_cost_with_trading_seller
     return money_saved / model.total_cost_without_trading_seller
 
 
-def compute_costs_savings_buyer(model) -> float:
+def compute_buyer_savings(model) -> float:
     money_saved = model.total_cost_without_trading_buyer - model.total_cost_with_trading_buyer
     return money_saved / model.total_cost_without_trading_buyer
 
 
-def compute_costs_savings(model) -> float:
+def compute_overall_savings(model) -> float:
     total_costs_without_trading = \
         model.total_cost_without_trading_seller + model.total_cost_without_trading_buyer
     total_costs_with_trading = \
@@ -76,9 +76,9 @@ class WasteModel(Model):
         #     print(i[2].unique_id, i[2].buyer)
         self.data_collector = DataCollector(
             model_reporters={'Recycling_Rate': compute_recycling_rate,
-                             'Seller_Savings': compute_costs_savings_seller,
-                             'Buyer_Savings': compute_costs_savings_buyer,
-                             'Overall_Savings': compute_costs_savings},
+                             'Seller_Savings': compute_seller_savings,
+                             'Buyer_Savings': compute_buyer_savings,
+                             'Overall_Savings': compute_overall_savings},
             agent_reporters=None)
 
     def step(self) -> None:
