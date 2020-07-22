@@ -10,6 +10,12 @@ class WasteAgent(Agent):
         self.cost_to_change_capacity = 5  # assume that it is the same cost to increase or decrease capacity
         self.days_taken_to_increase_capacity = 3
         self.daily_demand = 0
+        self.demand_list = []
+
+    def edit_demand_list(self) -> None:
+        self.demand_list.append(self.daily_demand)
+        if len(self.demand_list) > 7:
+            del self.demand_list[0]
 
 
 class Seller(WasteAgent):
@@ -43,10 +49,11 @@ class Seller(WasteAgent):
         #self.waste_left = 6
 
     def advance(self) -> None:
-        print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
+        # print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
         if self.is_matched:
             self.sell()
-        print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
+        # print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
+        self.edit_demand_list()
 
 
 class Buyer(WasteAgent):
@@ -77,10 +84,11 @@ class Buyer(WasteAgent):
         self.capacity_left = self.monthly_capacity
 
     def advance(self) -> None:
-        print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
+        # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
         if self.is_matched:
             self.buy()
-        print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
+        # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
+        self.edit_demand_list()
 
 
 

@@ -5,8 +5,6 @@ from abm_buyer_seller.agents import Buyer, Seller
 import bisect
 import random
 
-random.seed(1)
-
 
 class SimultaneousActivationMoneyModel(SimultaneousActivation):
     """
@@ -20,6 +18,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     total_cost_with_trading_seller = 0
     total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
     total_cost_with_trading_buyer = 0
+
+    random.seed(1)
 
     def __init__(self, model) -> None:
         super().__init__(model)
@@ -79,7 +79,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             self.update_variables_buyer(buyer, daily_demand)
 
         for agent in self.agent_buffer(shuffled=False):
-            print(agent.daily_demand)
+            # print(agent.daily_demand)
+            print(agent.demand_list)
             agent.advance()
 
         self.steps += 1
