@@ -3,6 +3,9 @@ from mesa import Agent
 from abm_buyer_seller.agents import WasteAgent
 from abm_buyer_seller.agents import Buyer, Seller
 import bisect
+import random
+
+random.seed(1)
 
 
 class SimultaneousActivationMoneyModel(SimultaneousActivation):
@@ -44,7 +47,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         """
         Executes the step of all agents.
         After which, updates the class variables for recycling rate and cost savings calculation.
-        Finally, execues the advance of all agents.
+        Finally, executes the advance of all agents.
         """
         # print('yoyoo')
         # print(self.__str__())
@@ -62,19 +65,21 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         # for agent in self.agent_buffer(shuffled=False):
         #     agent.advance()
         # here
+        daily_demand = random.randint(5, 10)
         for i in range(len(self.sellers)):
         # for i in range(2):
             seller = self.get_seller_from_list(i)
             seller.step()
-            self.update_class_variables_seller(seller)
+            self.update_variables_seller(seller, daily_demand)
 
         for i in range(len(self.buyers)):
         # for i in range(2):
             buyer = self.get_buyer_from_list(i)
             buyer.step()
-            self.update_class_variables_buyer(buyer)
+            self.update_variables_buyer(buyer, daily_demand)
 
         for agent in self.agent_buffer(shuffled=False):
+            print(agent.daily_demand)
             agent.advance()
 
         self.steps += 1
@@ -96,10 +101,12 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     def get_buyer_from_list(self, index) -> Buyer:
         return self.buyers[index][2]
 
-    def update_class_variables_seller(self, seller) -> None:
+    def update_variables_seller(self, seller, daily_demand) -> None:
+        seller.daily_demand = daily_demand
         self.total_waste_produced += seller.waste_left
         self.total_cost_without_trading_seller += \
             seller.waste_left * seller.cost_per_unit_waste_disposed
+
         if seller.is_matched:
             self.set_trade_quantity(seller)
             cost = (seller.waste_left - seller.trade_quantity) * \
@@ -111,9 +118,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                 seller.waste_left * seller.cost_per_unit_waste_disposed
         return
 
-    def update_class_variables_buyer(self, buyer) -> None:
+    def update_variables_buyer(self, buyer, daily_demand) -> None:
+        buyer.daily_demand = daily_demand
         self.total_cost_without_trading_buyer += \
             buyer.input * buyer.cost_per_new_input
+
         if buyer.is_matched:
             cost = (buyer.input - buyer.trade_quantity) * \
                 buyer.cost_per_new_input + \
