@@ -20,7 +20,7 @@ class Seller(WasteAgent):
         self.monthly_waste_produced = monthly_waste_produced
         self.min_price = min_price
         self.buyer = None
-        self.waste_left = monthly_waste_produced
+        self.waste_left = 0
         self.cost_per_unit_waste_disposed = 2
         self.trade_cost = 0
 
@@ -58,7 +58,7 @@ class Buyer(WasteAgent):
         self.max_price = max_price
         self.seller = None
         self.trade_cost = None  # i think this one also don't need. okay maybe not
-        self.capacity_left = monthly_capacity
+        self.capacity_left = 0
         self.cost_per_new_input = 10
         self.input = 10
 
