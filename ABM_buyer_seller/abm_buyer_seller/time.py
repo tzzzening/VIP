@@ -18,13 +18,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     total_cost_with_trading_seller = 0
     total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
     total_cost_with_trading_buyer = 0
-
-    random.seed(1)
+    # random.seed(1)
 
     def __init__(self, model) -> None:
         super().__init__(model)
         self.sellers = []
         self.buyers = []
+        # print('TIME INIT')
+        # random.seed(1)
 
     def __str__(self) -> str:
         output = ""

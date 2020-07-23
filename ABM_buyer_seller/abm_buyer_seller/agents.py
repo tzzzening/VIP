@@ -8,7 +8,7 @@ class WasteAgent(Agent):
         self.is_matched = False
         self.trade_quantity = 0
         self.cost_to_change_capacity = 5  # assume that it is the same cost to increase or decrease capacity
-        self.days_taken_to_increase_capacity = 3
+        self.days_taken_to_increase_capacity = 7
         self.daily_demand = 0
         self.demand_list = []
 
