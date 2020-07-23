@@ -13,6 +13,7 @@ class WasteAgent(Agent):
         self.daily_demand = 0
         self.demand_list = []
         self.capacity_planning_strategy = None
+        self.day_capacity_changes = 0
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.daily_demand)
@@ -24,10 +25,11 @@ class Seller(WasteAgent):
     """
     A seller that ...
     """
-    def __init__(self, unique_id, monthly_waste_produced, min_price, model) -> None:
+    def __init__(self, unique_id, monthly_waste_produced, min_price, capacity, model) -> None:
         super().__init__(unique_id, model)
         self.monthly_waste_produced = monthly_waste_produced
         self.min_price = min_price
+        self.capacity = capacity
         self.buyer = None
         self.waste_left = 0
         self.cost_per_unit_waste_disposed = 2

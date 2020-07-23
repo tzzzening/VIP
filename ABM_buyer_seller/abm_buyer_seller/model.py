@@ -34,7 +34,7 @@ class WasteModel(Model):
     Testing 123.
     """
 
-    num_steps = 0
+    # num_steps = 0
     total_waste_produced = 0
     total_waste_traded = 0
     # total_waste_traded_per_step = 0
@@ -53,6 +53,7 @@ class WasteModel(Model):
         self.grid = MultiGrid(width, height, torus=False)
         self.schedule = SimultaneousActivationMoneyModel(self)
         self.running = True
+        self.steps = 0
 
 
         # for i in range(seller_num):
@@ -63,11 +64,11 @@ class WasteModel(Model):
         #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
         #     self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, capacity=5, model=self)
         self.schedule.add(seller)
         buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
         self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, model=self)
+        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, capacity=5, model=self)
         self.schedule.add(seller)
         buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
         self.schedule.add(buyer)
@@ -92,8 +93,8 @@ class WasteModel(Model):
         # print('overall costs savings: trade {} no {}'.
         #       format(self.total_cost_with_trading, self.total_cost_without_trading))
 
-        self.num_steps += 1
-        print('step', self.num_steps)
+        self.steps = self.schedule.steps
+        print('step', self.steps)
         self.schedule.step()
         self.total_waste_produced = self.schedule.total_waste_produced
         self.total_waste_traded = self.schedule.total_waste_traded
