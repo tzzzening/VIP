@@ -25,7 +25,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.sellers = []
         self.buyers = []
         # print('TIME INIT')
-        # random.seed(1)
+        random.seed(1)
 
     def __str__(self) -> str:
         output = ""
@@ -81,7 +81,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         for agent in self.agent_buffer(shuffled=False):
             # print(agent.daily_demand)
-            print(agent.demand_list)
+            # print(agent.demand_list)
+            print(agent.capacity_planning_strategy)
             agent.advance()
 
         self.steps += 1

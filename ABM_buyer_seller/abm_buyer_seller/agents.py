@@ -1,5 +1,6 @@
 from mesa import Agent
 import random
+from abm_buyer_seller.enums import CapacityPlanningStrategies
 
 
 class WasteAgent(Agent):
@@ -11,6 +12,7 @@ class WasteAgent(Agent):
         self.days_taken_to_increase_capacity = 7
         self.daily_demand = 0
         self.demand_list = []
+        self.capacity_planning_strategy = None
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.daily_demand)
@@ -30,6 +32,7 @@ class Seller(WasteAgent):
         self.waste_left = 0
         self.cost_per_unit_waste_disposed = 2
         self.trade_cost = 0
+        self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} waste produced, with min price of {}. "\
@@ -69,6 +72,7 @@ class Buyer(WasteAgent):
         self.capacity_left = 0
         self.cost_per_new_input = 10
         self.input = 10
+        self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\
