@@ -87,7 +87,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             # print(agent.daily_demand)
             # print(agent.capacity_planning_strategy)
             agent.advance()
-            # print(agent.demand_list)
+            print(agent.demand_list)
             # print(agent.capacity_list)
             # print(agent.capacity)
             if self.steps % 28 == 0:
@@ -141,7 +141,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.total_cost_without_trading_buyer += \
             buyer.new_input * buyer.cost_per_new_input + \
             buyer.maintenance_cost_per_capacity * buyer.capacity
+            # buyer.maintenance_cost_per_capacity * buyer.weekly_capacity
 
+        # self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.weekly_capacity
         self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.capacity
 
         if buyer.is_matched:
