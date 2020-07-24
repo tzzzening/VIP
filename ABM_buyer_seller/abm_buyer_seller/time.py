@@ -27,7 +27,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         super().__init__(model)
         self.sellers = []
         self.buyers = []
-        self.steps = 0
+        self.steps = 1
         # print('TIME INIT')
         random.seed(1)
 
@@ -85,9 +85,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         for agent in self.agent_buffer(shuffled=False):
             # print(agent.daily_demand)
-            print(agent.demand_list)
+            # print(agent.demand_list)
             # print(agent.capacity_planning_strategy)
             agent.advance()
+            print(agent.demand_list)
 
             self.plan_capacity(agent)
 
@@ -150,14 +151,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         m, c = self.best_fit_slope_and_intercept(x_values, y_values)
         print('gradient and y-intercept', m, c)
         if agent.capacity_planning_strategy is CapacityPlanningStrategies.lead:
-            # print('lead')
-            agent.new_capacity = 56 * m + c  # change magic numbers later
+            print('lead')
+            # agent.new_capacity = 56 * m + c  # change magic numbers later
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.match:
-            # print('match')
-            agent.new_capacity = 42 * m + c
+            print('match')
+            # agent.new_capacity = 42 * m + c
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.lag:
-            # print('lag')
-            agent.new_capacity = 28 * m + c
+            print('lag')
+            # agent.new_capacity = 28 * m + c
         else:
             raise Exception
 
