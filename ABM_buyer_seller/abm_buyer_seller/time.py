@@ -89,8 +89,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             # print(agent.capacity_planning_strategy)
             agent.advance()
             print(agent.demand_list)
-
-            self.plan_capacity(agent)
+            if self.steps % 28 == 0:
+                self.plan_capacity(agent)
+            elif self.steps % 28 == agent.days_taken_to_increase_capacity and self.steps > 28:
+                agent.capacity = agent.new_capacity
 
         self.steps += 1
         self.time += 1
@@ -152,13 +154,13 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         print('gradient and y-intercept', m, c)
         if agent.capacity_planning_strategy is CapacityPlanningStrategies.lead:
             print('lead')
-            # agent.new_capacity = 56 * m + c  # change magic numbers later
+            agent.new_capacity = int(56 * m + c)  # change magic numbers later
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.match:
             print('match')
-            # agent.new_capacity = 42 * m + c
+            agent.new_capacity = int(42 * m + c)
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.lag:
             print('lag')
-            # agent.new_capacity = 28 * m + c
+            agent.new_capacity = int(28 * m + c)
         else:
             raise Exception
 
