@@ -6,7 +6,7 @@ from mesa.datacollection import DataCollector
 
 
 def compute_recycling_rate(model) -> float:
-    print('MODEL')
+    # print('MODEL')
     return model.total_waste_traded / model.total_waste_produced
 
 
@@ -66,11 +66,11 @@ class WasteModel(Model):
 
         seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, capacity=5, model=self)
         self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, model=self)
+        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, capacity=5, model=self)
         self.schedule.add(buyer)
         # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, capacity=5, model=self)
         # self.schedule.add(seller)
-        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, model=self)
+        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, capacity=5, model=self)
         # self.schedule.add(buyer)
 
         self.match_agents()
@@ -85,11 +85,11 @@ class WasteModel(Model):
             agent_reporters=None)
 
     def step(self) -> None:
-        # print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        # print('before seller costs savings: trade {} no {}'.
-        #       format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
-        # print('before buyer costs savings: trade {} no {}'.
-        #       format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+        print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        print('before seller costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+        print('before buyer costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
 
         self.steps = self.schedule.steps
         print('step', self.steps)
@@ -100,14 +100,14 @@ class WasteModel(Model):
         self.total_cost_with_trading_seller = self.schedule.total_cost_with_trading_seller
         self.total_cost_without_trading_buyer = self.schedule.total_cost_without_trading_buyer
         self.total_cost_with_trading_buyer = self.schedule.total_cost_with_trading_buyer
-        # print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        # print('after seller costs savings: trade {} no {}'.
-        #       format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
-        # print('after buyer costs savings: trade {} no {}'.
-        #       format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
-        # print('seller saving', compute_seller_savings(self))
-        # print('buyer saving', compute_buyer_savings(self))
-        # print('overall saving', compute_overall_savings(self))
+        print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        print('after seller costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+        print('after buyer costs savings: trade {} no {}'.
+              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+        print('seller saving', compute_seller_savings(self))
+        print('buyer saving', compute_buyer_savings(self))
+        print('overall saving', compute_overall_savings(self))
         self.data_collector.collect(self)
 
     def __str__(self) -> str:
@@ -133,7 +133,9 @@ class WasteModel(Model):
 
             self.prepare_trade(seller, buyer)
             # if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
-            if i == 1 or j == 1:
+            # if i == 1 or j == 1:
+            if i == 0 or j == 0:
+
                 break
             i += 1
             j += 1

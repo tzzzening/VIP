@@ -16,7 +16,7 @@ from mesa.batchrunner import BatchRunner
 
 
 def compute_recycling_rate(model) -> float:
-    print('RUN')
+    # print('RUN')
     return model.total_waste_traded / model.total_waste_produced
 
 
@@ -44,7 +44,7 @@ variable_params = {'seller_num': range(1, 2), 'buyer_num': range(1, 2)}
 # fixed_params = {'width': 1, 'height': 1, 'num_per_agent': 2}
 # variable_params = None
 batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
-                        iterations=1, max_steps=60,
+                        iterations=1, max_steps=2,
                         model_reporters={'Recycling_Rate': compute_recycling_rate,
                                          'Seller_Savings': compute_seller_savings,
                                          'Buyer_Savings': compute_buyer_savings,

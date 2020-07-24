@@ -12,14 +12,18 @@ class WasteAgent(Agent):
         self.days_taken_to_increase_capacity = 7
         self.daily_demand = 0
         self.demand_list = []
+        self.capacity_list = []  # temporary
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
         self.new_capacity = 0
+        self.maintenance_cost_per_capacity = 1
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.daily_demand)
+        self.capacity_list.append(self.capacity)  # temp
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
+            del self.capacity_list[0]  # temp
 
 
 class Seller(WasteAgent):
@@ -33,7 +37,7 @@ class Seller(WasteAgent):
         self.capacity = capacity
         self.buyer = None
         self.waste_left = 0
-        self.cost_per_unit_waste_disposed = 2
+        self.cost_per_unit_waste_disposed = 4
         self.trade_cost = 0
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
@@ -66,15 +70,16 @@ class Buyer(WasteAgent):
     """
     A buyer that ...
     """
-    def __init__(self, unique_id, monthly_capacity, max_price, model) -> None:
+    def __init__(self, unique_id, monthly_capacity, max_price, capacity, model) -> None:
         super().__init__(unique_id, model)
-        self.monthly_capacity = monthly_capacity
+        self.monthly_capacity = monthly_capacity  # for waste treatment?
         self.max_price = max_price
         self.seller = None
         self.trade_cost = None  # i think this one also don't need. okay maybe not
         self.capacity_left = 0
         self.cost_per_new_input = 10
         self.input = 10
+        self.capacity = capacity  # for goods
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
     def __str__(self) -> str:

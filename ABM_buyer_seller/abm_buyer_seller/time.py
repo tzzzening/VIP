@@ -85,10 +85,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         for agent in self.agent_buffer(shuffled=False):
             # print(agent.daily_demand)
-            # print(agent.demand_list)
             # print(agent.capacity_planning_strategy)
             agent.advance()
-            print(agent.demand_list)
+            # print(agent.demand_list)
+            # print(agent.capacity_list)
+            # print(agent.capacity)
             if self.steps % 28 == 0:
                 self.plan_capacity(agent)
             elif self.steps % 28 == agent.days_taken_to_increase_capacity and self.steps > 28:
@@ -117,7 +118,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         seller.daily_demand = daily_demand
         self.total_waste_produced += seller.waste_left
         self.total_cost_without_trading_seller += \
-            seller.waste_left * seller.cost_per_unit_waste_disposed
+            seller.waste_left * seller.cost_per_unit_waste_disposed + \
+            seller.maintenance_cost_per_capacity * seller.capacity
+
+        self.total_cost_with_trading_seller += \
+            seller.maintenance_cost_per_capacity * seller.capacity
 
         if seller.is_matched:
             self.set_trade_quantity(seller)
@@ -133,7 +138,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     def update_variables_buyer(self, buyer, daily_demand) -> None:
         buyer.daily_demand = daily_demand
         self.total_cost_without_trading_buyer += \
-            buyer.input * buyer.cost_per_new_input
+            buyer.input * buyer.cost_per_new_input + \
+            buyer.maintenance_cost_per_capacity * buyer.capacity
+
+        self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.capacity
 
         if buyer.is_matched:
             cost = (buyer.input - buyer.trade_quantity) * \
