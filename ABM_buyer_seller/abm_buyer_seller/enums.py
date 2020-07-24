@@ -6,6 +6,8 @@ class CapacityPlanningStrategies(enum.Enum):
     match = 'MATCH'
     lag = 'LAG'
 
+    # day_to_forecast_till = {}
+
 
 
 

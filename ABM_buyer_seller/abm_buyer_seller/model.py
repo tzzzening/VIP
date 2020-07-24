@@ -85,13 +85,11 @@ class WasteModel(Model):
             agent_reporters=None)
 
     def step(self) -> None:
-        print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        print('before seller costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
-        print('before buyer costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
-        # print('overall costs savings: trade {} no {}'.
-        #       format(self.total_cost_with_trading, self.total_cost_without_trading))
+        # print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        # print('before seller costs savings: trade {} no {}'.
+        #       format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+        # print('before buyer costs savings: trade {} no {}'.
+        #       format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
 
         self.steps = self.schedule.steps
         print('step', self.steps)
@@ -102,14 +100,14 @@ class WasteModel(Model):
         self.total_cost_with_trading_seller = self.schedule.total_cost_with_trading_seller
         self.total_cost_without_trading_buyer = self.schedule.total_cost_without_trading_buyer
         self.total_cost_with_trading_buyer = self.schedule.total_cost_with_trading_buyer
-        print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        print('after seller costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
-        print('after buyer costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
-        print('seller saving', compute_seller_savings(self))
-        print('buyer saving', compute_buyer_savings(self))
-        print('overall saving', compute_overall_savings(self))
+        # print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        # print('after seller costs savings: trade {} no {}'.
+        #       format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+        # print('after buyer costs savings: trade {} no {}'.
+        #       format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+        # print('seller saving', compute_seller_savings(self))
+        # print('buyer saving', compute_buyer_savings(self))
+        # print('overall saving', compute_overall_savings(self))
         self.data_collector.collect(self)
 
     def __str__(self) -> str:

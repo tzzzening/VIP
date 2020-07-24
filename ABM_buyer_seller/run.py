@@ -40,11 +40,11 @@ def compute_overall_savings(model) -> float:
 
 
 fixed_params = {'width': 1, 'height': 1}
-variable_params = {'seller_num': range(2, 3), 'buyer_num': range(2, 3)}
+variable_params = {'seller_num': range(1, 2), 'buyer_num': range(1, 2)}
 # fixed_params = {'width': 1, 'height': 1, 'num_per_agent': 2}
 # variable_params = None
 batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
-                        iterations=2, max_steps=10,
+                        iterations=1, max_steps=35,
                         model_reporters={'Recycling_Rate': compute_recycling_rate,
                                          'Seller_Savings': compute_seller_savings,
                                          'Buyer_Savings': compute_buyer_savings,
@@ -53,7 +53,7 @@ batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
 batch_run.run_all()
 run_data = batch_run.get_model_vars_dataframe()
 run_data.head()
-plot_list = [1, 2]
+plot_list = [1]
 plt.scatter(plot_list, run_data.Recycling_Rate)
 plt.scatter(plot_list, run_data.Seller_Savings)
 plt.scatter(plot_list, run_data.Buyer_Savings)

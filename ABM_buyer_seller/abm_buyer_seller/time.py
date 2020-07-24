@@ -5,6 +5,8 @@ from abm_buyer_seller.agents import Buyer, Seller
 from abm_buyer_seller.enums import CapacityPlanningStrategies
 import bisect
 import random
+from statistics import mean
+import numpy as np
 
 
 class SimultaneousActivationMoneyModel(SimultaneousActivation):
@@ -25,6 +27,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         super().__init__(model)
         self.sellers = []
         self.buyers = []
+        self.steps = 0
         # print('TIME INIT')
         random.seed(1)
 
@@ -82,8 +85,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         for agent in self.agent_buffer(shuffled=False):
             # print(agent.daily_demand)
-            # print(agent.demand_list)
-            print(agent.capacity_planning_strategy)
+            print(agent.demand_list)
+            # print(agent.capacity_planning_strategy)
             agent.advance()
 
             self.plan_capacity(agent)
@@ -139,17 +142,31 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                 buyer.input * buyer.cost_per_new_input
         return
 
-    def plan_capacity(self, agent) -> None:
-        if self.steps < 7:
+    def plan_capacity(self, agent: WasteAgent) -> None:
+        if self.steps % 28 != 0:  # take 28 weeks of data to come out with the forecast
             return
+        x_values = np.array(list(range(1, 29)), dtype=np.float64)
+        y_values = np.array(agent.demand_list, dtype=np.float64)
+        m, c = self.best_fit_slope_and_intercept(x_values, y_values)
+        print('gradient and y-intercept', m, c)
         if agent.capacity_planning_strategy is CapacityPlanningStrategies.lead:
-            print('lead')
+            # print('lead')
+            agent.new_capacity = 56 * m + c  # change magic numbers later
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.match:
-            print('match')
+            # print('match')
+            agent.new_capacity = 42 * m + c
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.lag:
-            print('lag')
+            # print('lag')
+            agent.new_capacity = 28 * m + c
         else:
             raise Exception
+
+    @staticmethod
+    def best_fit_slope_and_intercept(x_values, y_values):
+        m = (((mean(x_values) * mean(y_values)) - mean(x_values * y_values)) /
+             ((mean(x_values) * mean(x_values)) - mean(x_values * x_values)))
+        c = mean(y_values) - m * mean(x_values)
+        return m, c
 
 
 

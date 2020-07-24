@@ -14,10 +14,11 @@ class WasteAgent(Agent):
         self.demand_list = []
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
+        self.new_capacity = 0
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.daily_demand)
-        if len(self.demand_list) > 7:
+        if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
 
 
