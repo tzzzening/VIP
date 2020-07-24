@@ -64,13 +64,13 @@ class WasteModel(Model):
         #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
         #     self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, capacity=5, model=self)
+        seller = Seller(unique_id=self.next_id(), weekly_waste_produced=5, min_price=5, capacity=5, model=self)
         self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), monthly_capacity=3, max_price=5, capacity=5, model=self)
+        buyer = Buyer(unique_id=self.next_id(), weekly_capacity=3, max_price=5, capacity=5, model=self)
         self.schedule.add(buyer)
-        # seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5, min_price=5, capacity=5, model=self)
+        # seller = Seller(unique_id=self.next_id(), weekly_waste_produced=5, min_price=5, capacity=5, model=self)
         # self.schedule.add(seller)
-        # buyer = Buyer(unique_id=self.next_id(), monthly_capacity=25, max_price=5, capacity=5, model=self)
+        # buyer = Buyer(unique_id=self.next_id(), weekly_capacity=25, max_price=5, capacity=5, model=self)
         # self.schedule.add(buyer)
 
         self.match_agents()

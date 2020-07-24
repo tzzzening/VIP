@@ -101,10 +101,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     def set_trade_quantity(self, seller) -> None:
         buyer = seller.buyer
         seller_quantity = seller.waste_left
-        buyer_quantity = buyer.monthly_capacity
+        buyer_quantity = buyer.weekly_capacity
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
+        # buyer.total_input = buyer.new_input + trade_quantity
         self.total_waste_traded += trade_quantity
         return
 
@@ -115,7 +116,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         return self.buyers[index][2]
 
     def update_variables_seller(self, seller, daily_demand) -> None:
-        seller.daily_demand = daily_demand
+        seller.weekly_demand = daily_demand
         self.total_waste_produced += seller.waste_left
         self.total_cost_without_trading_seller += \
             seller.waste_left * seller.cost_per_unit_waste_disposed + \
@@ -136,21 +137,20 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         return
 
     def update_variables_buyer(self, buyer, daily_demand) -> None:
-        buyer.daily_demand = daily_demand
+        buyer.weekly_demand = daily_demand
         self.total_cost_without_trading_buyer += \
-            buyer.input * buyer.cost_per_new_input + \
+            buyer.new_input * buyer.cost_per_new_input + \
             buyer.maintenance_cost_per_capacity * buyer.capacity
 
         self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.capacity
 
         if buyer.is_matched:
-            cost = (buyer.input - buyer.trade_quantity) * \
-                buyer.cost_per_new_input + \
-                buyer.trade_quantity * buyer.trade_cost
+            cost = buyer.new_input * buyer.cost_per_new_input + \
+                   buyer.trade_quantity * buyer.trade_cost
             self.total_cost_with_trading_buyer += cost
         else:
             self.total_cost_with_trading_buyer += \
-                buyer.input * buyer.cost_per_new_input
+                buyer.new_input * buyer.cost_per_new_input
         return
 
     def plan_capacity(self, agent: WasteAgent) -> None:

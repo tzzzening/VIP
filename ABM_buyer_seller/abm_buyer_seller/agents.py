@@ -10,16 +10,17 @@ class WasteAgent(Agent):
         self.trade_quantity = 0
         self.cost_to_change_capacity = 5  # assume that it is the same cost to increase or decrease capacity
         self.days_taken_to_increase_capacity = 7
-        self.daily_demand = 0
+        self.weekly_demand = 0
         self.demand_list = []
         self.capacity_list = []  # temporary
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
         self.new_capacity = 0
         self.maintenance_cost_per_capacity = 1
+        self.weekly_production = 0
 
     def edit_demand_list(self) -> None:
-        self.demand_list.append(self.daily_demand)
+        self.demand_list.append(self.weekly_demand)
         self.capacity_list.append(self.capacity)  # temp
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
@@ -30,9 +31,9 @@ class Seller(WasteAgent):
     """
     A seller that ...
     """
-    def __init__(self, unique_id, monthly_waste_produced, min_price, capacity, model) -> None:
+    def __init__(self, unique_id, weekly_waste_produced, min_price, capacity, model) -> None:
         super().__init__(unique_id, model)
-        self.monthly_waste_produced = monthly_waste_produced
+        self.weekly_waste_produced = weekly_waste_produced
         self.min_price = min_price
         self.capacity = capacity
         self.buyer = None
@@ -40,6 +41,7 @@ class Seller(WasteAgent):
         self.cost_per_unit_waste_disposed = 4
         self.trade_cost = 0
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
+        self.waste_generated_per_good = 2
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} waste produced, with min price of {}. "\
@@ -55,8 +57,10 @@ class Seller(WasteAgent):
         """
         Generate waste for the day.
         """
-        self.waste_left = random.randint((self.monthly_waste_produced - 1), (self.monthly_waste_produced + 1))
-        #self.waste_left = 6
+        self.weekly_production = self.capacity
+        self.waste_left = self.waste_generated_per_good * self.weekly_production
+        # self.waste_left = random.randint((self.weekly_waste_produced - 1), (self.weekly_waste_produced + 1))
+        # self.waste_left = 6
 
     def advance(self) -> None:
         # print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
@@ -70,15 +74,18 @@ class Buyer(WasteAgent):
     """
     A buyer that ...
     """
-    def __init__(self, unique_id, monthly_capacity, max_price, capacity, model) -> None:
+    def __init__(self, unique_id, weekly_capacity, max_price, capacity, model) -> None:
         super().__init__(unique_id, model)
-        self.monthly_capacity = monthly_capacity  # for waste treatment?
+        self.weekly_capacity = weekly_capacity  # for waste treatment?
         self.max_price = max_price
         self.seller = None
-        self.trade_cost = None  # i think this one also don't need. okay maybe not
+        self.trade_cost = None
         self.capacity_left = 0
         self.cost_per_new_input = 10
-        self.input = 10
+        # self.input = 10
+        self.new_input = 2  # change later
+        # self.total_input = 0
+        self.input_per_good = 1
         self.capacity = capacity  # for goods
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
@@ -93,7 +100,8 @@ class Buyer(WasteAgent):
         self.capacity_left -= self.trade_quantity
 
     def step(self) -> None:
-        self.capacity_left = self.monthly_capacity
+        self.capacity_left = self.weekly_capacity
+        self.weekly_production = min(self.capacity, self.total_input / self.input_per_good)
 
     def advance(self) -> None:
         # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
@@ -101,6 +109,13 @@ class Buyer(WasteAgent):
             self.buy()
         # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
         self.edit_demand_list()
+
+    @property
+    def total_input(self):
+        if self.is_matched:
+            return self.new_input + self.trade_quantity
+        else:
+            return self.new_input
 
 
 
