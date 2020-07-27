@@ -29,7 +29,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.buyers = []
         self.steps = 1
         # print('TIME INIT')
-        random.seed(1)
+        random.seed(2)
 
     def __str__(self) -> str:
         output = ""
@@ -89,7 +89,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         if self.steps % 28 == 0:
             print(self)
+            self.initialise_agents()
             self.match_agents()
+        # if self.steps == 29:
+        #     print(self)
 
         self.steps += 1
         self.time += 1
@@ -245,6 +248,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     @property
     def buyer_num(self) -> int:
         return len(self.buyers)
+
+    def initialise_agents(self) -> None:
+        for agent in self.agent_buffer(shuffled=False):
+            agent.is_matched = False
+        return
 
 
 
