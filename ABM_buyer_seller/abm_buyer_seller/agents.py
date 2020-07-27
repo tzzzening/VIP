@@ -1,5 +1,4 @@
 from mesa import Agent
-import random
 from abm_buyer_seller.enums import CapacityPlanningStrategies
 
 
@@ -16,13 +15,14 @@ class WasteAgent(Agent):
         self.production_list = [] # temporary
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
-        self.new_capacity = 0
+        self.new_production_capacity = 0
         self.maintenance_cost_per_capacity = 1
         self.weekly_production = 0
+        self.production_capacity = 0
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.weekly_demand)
-        self.capacity_list.append(self.capacity)  # temp
+        self.capacity_list.append(self.production_capacity)  # temp
         self.production_list.append(self.weekly_production)  # temp
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
@@ -34,11 +34,11 @@ class Seller(WasteAgent):
     """
     A seller that ...
     """
-    def __init__(self, unique_id, weekly_waste_produced, min_price, capacity, model) -> None:
+    def __init__(self, unique_id, weekly_waste_produced, min_price, production_capacity, model) -> None:
         super().__init__(unique_id, model)
         self.weekly_waste_produced = weekly_waste_produced
         self.min_price = min_price
-        self.capacity = capacity
+        self.production_capacity = production_capacity
         self.buyer = None
         self.waste_left = 0
         self.cost_per_unit_waste_disposed = 4
@@ -60,7 +60,7 @@ class Seller(WasteAgent):
         """
         Generate production and waste for the week.
         """
-        self.weekly_production = self.capacity
+        self.weekly_production = self.production_capacity
         self.waste_left = self.waste_generated_per_good * self.weekly_production
         # self.waste_left = random.randint((self.weekly_waste_produced - 1), (self.weekly_waste_produced + 1))
         # self.waste_left = 6
@@ -77,38 +77,38 @@ class Buyer(WasteAgent):
     """
     A buyer that ...
     """
-    def __init__(self, unique_id, weekly_capacity, max_price, capacity, model) -> None:
+    def __init__(self, unique_id, waste_treatment_capacity, max_price, production_capacity, model) -> None:
         super().__init__(unique_id, model)
-        self.weekly_capacity = weekly_capacity  # for waste treatment?
+        self.waste_treatment_capacity = waste_treatment_capacity  # for waste treatment?
         self.max_price = max_price
         self.seller = None
         self.trade_cost = None
-        self.capacity_left = 0
+        self.waste_treatment_capacity_left = 0
         self.cost_per_new_input = 10
         # self.input = 10
         self.new_input = 2  # change later
         # self.total_input = 0
         self.input_per_good = 1
-        self.capacity = capacity  # for goods
-        self.capacity_planning_strategy = CapacityPlanningStrategies.match
+        self.production_capacity = production_capacity  # for goods
+        self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\
-            .format(self.unique_id, self.capacity_left, self.max_price)
+            .format(self.unique_id, self.waste_treatment_capacity_left, self.max_price)
         if self.is_matched:
             output += "Bought from seller {}.".format(self.seller.unique_id)
         return output
 
     def buy(self) -> None:
-        self.capacity_left -= self.trade_quantity
+        self.waste_treatment_capacity_left -= self.trade_quantity
 
     def step(self) -> None:
         """
-
+        Update waste treatment capacity and generate production.
         :return:
         """
-        self.capacity_left = self.weekly_capacity  # this is wrong, capacity left is refering to waste, weekly capacity is refering to production
-        self.weekly_production = min(self.capacity, self.total_input / self.input_per_good)
+        self.waste_treatment_capacity_left = self.waste_treatment_capacity  # this is wrong, capacity left is refering to waste, weekly capacity is refering to production
+        self.weekly_production = min(self.production_capacity, self.total_input // self.input_per_good)
 
     def advance(self) -> None:
         # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
@@ -123,6 +123,10 @@ class Buyer(WasteAgent):
             return self.new_input + self.trade_quantity
         else:
             return self.new_input
+
+    @property
+    def total_capacity(self):
+        return self.production_capacity + self.waste_treatment_capacity
 
 
 
