@@ -62,20 +62,33 @@ class WasteModel(Model):
         #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
         #     self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), weekly_waste_produced=4, min_price=5,
-                        production_capacity=4, model=self)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
         self.schedule.add(seller)
         buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
                       production_capacity=5, model=self)
         self.schedule.add(buyer)
-        # seller = Seller(unique_id=self.next_id(), weekly_waste_produced=5, min_price=5,
-        # production_capacity=5, model=self)
-        # self.schedule.add(seller)
-        # buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=25, max_price=5,
-        # production_capacity=5, model=self)
-        # self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
 
-        self.match_agents()
+        # self.match_agents()
         self.data_collector = DataCollector(
             model_reporters={'Recycling_Rate': compute_recycling_rate,
                              'Seller_Savings': compute_seller_savings,
