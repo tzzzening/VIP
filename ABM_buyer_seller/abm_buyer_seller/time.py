@@ -56,6 +56,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         """
         if self.steps == 1:
             self.match_agents()  # shift to every month
+            print(self)
         daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
         for i in range(self.seller_num):
             seller = self.get_seller_from_list(i)
@@ -66,6 +67,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             buyer = self.get_buyer_from_list(i)
             buyer.step()
             self.update_variables_buyer(buyer, daily_demand)
+
+        if self.steps % 28 == 0:
+            self.sellers = []
+            self.buyers = []
 
         for agent in self.agent_buffer(shuffled=False):
             # print(agent.daily_demand)
@@ -83,6 +88,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                 agent.production_capacity = agent.new_production_capacity
 
         if self.steps % 28 == 0:
+            print(self)
             self.match_agents()
 
         self.steps += 1
@@ -222,8 +228,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         c = mean(y_values) - m * mean(x_values)
         return m, c
 
-    @staticmethod
-    def change_price(agent) -> None:
+    def change_price(self, agent) -> None:
         percentage_change = agent.new_production_capacity / agent.production_capacity
         if isinstance(agent, Seller):
             new_price = int(agent.min_price * percentage_change)
@@ -231,6 +236,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         elif isinstance(agent, Buyer):
             new_price = int(agent.max_price * percentage_change)
             agent.max_price = random.randint(new_price - 1, new_price + 1)
+        self.add(agent)
 
     @property
     def seller_num(self) -> int:
