@@ -54,7 +54,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         and updates the class variables for recycling rate and cost savings calculation.
         Finally, executes the advance of all agents.
         """
-        self.match_agents()
+        if self.steps == 1:
+            self.match_agents()  # shift to every month
         daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
         for i in range(self.seller_num):
             seller = self.get_seller_from_list(i)
@@ -80,6 +81,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                 self.change_price(agent)
             elif self.steps % 28 == agent.days_taken_to_increase_capacity and self.steps > 28:
                 agent.production_capacity = agent.new_production_capacity
+
+        if self.steps % 28 == 0:
+            self.match_agents()
 
         self.steps += 1
         self.time += 1
@@ -107,7 +111,6 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                 break
             i += 1
             j += 1
-
         return
 
     @staticmethod

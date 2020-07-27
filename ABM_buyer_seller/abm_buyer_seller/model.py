@@ -88,7 +88,7 @@ class WasteModel(Model):
                       production_capacity=5, model=self)
         self.schedule.add(buyer)
 
-        self.match_agents()
+        # self.match_agents()
         self.data_collector = DataCollector(
             model_reporters={'Recycling_Rate': compute_recycling_rate,
                              'Seller_Savings': compute_seller_savings,
