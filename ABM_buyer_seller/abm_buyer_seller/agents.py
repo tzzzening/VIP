@@ -13,6 +13,7 @@ class WasteAgent(Agent):
         self.demand_list = []
         self.capacity_list = []  # temporary
         self.production_list = []  # temporary
+        self.price_list = []  # temporary
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
         self.new_production_capacity = 0
@@ -24,19 +25,23 @@ class WasteAgent(Agent):
         self.demand_list.append(self.weekly_demand)
         self.capacity_list.append(self.production_capacity)  # temp
         self.production_list.append(self.weekly_production)  # temp
+        if isinstance(self, Seller):
+            self.price_list.append(self.min_price)  # temp
+        elif isinstance(self, Buyer):
+            self.price_list.append(self.max_price)  # temp
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
             del self.capacity_list[0]  # temp
             del self.production_list[0]  # temp
+            del self.price_list[0]  # temp
 
 
 class Seller(WasteAgent):
     """
     A seller that ...
     """
-    def __init__(self, unique_id, weekly_waste_produced, min_price, production_capacity, model) -> None:
+    def __init__(self, unique_id, min_price, production_capacity, model) -> None:
         super().__init__(unique_id, model)
-        self.weekly_waste_produced = weekly_waste_produced
         self.min_price = min_price
         self.production_capacity = production_capacity
         self.buyer = None
@@ -99,7 +104,6 @@ class Buyer(WasteAgent):
     def step(self) -> None:
         """
         Update waste treatment capacity and generate production.
-        :return:
         """
         self.waste_treatment_capacity_left = self.waste_treatment_capacity
         self.weekly_production = min(self.production_capacity, self.total_input // self.input_per_good)
