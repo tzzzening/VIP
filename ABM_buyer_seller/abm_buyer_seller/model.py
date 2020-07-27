@@ -72,6 +72,21 @@ class WasteModel(Model):
         buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
                       production_capacity=5, model=self)
         self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
+        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        self.schedule.add(seller)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
+                      production_capacity=5, model=self)
+        self.schedule.add(buyer)
 
         self.match_agents()
         self.data_collector = DataCollector(

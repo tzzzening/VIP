@@ -56,14 +56,12 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         """
         self.match_agents()
         daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
-        for i in range(len(self.sellers)):
-        # for i in range(2):
+        for i in range(self.seller_num):
             seller = self.get_seller_from_list(i)
             seller.step()
             self.update_variables_seller(seller, daily_demand)
 
-        for i in range(len(self.buyers)):
-        # for i in range(2):
+        for i in range(self.buyer_num):
             buyer = self.get_buyer_from_list(i)
             buyer.step()
             self.update_variables_buyer(buyer, daily_demand)
@@ -98,18 +96,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             buyer = self.get_buyer_from_list(j)
             if seller.min_price > buyer.max_price:
                 print('{} rejected'.format(j))
-                # if j == (self.buyer_num - 1):
-                if j == 1:
+                if j == self.buyer_num - 1:
                     break
                 j += 1
                 continue
 
             self.prepare_trade(seller, buyer)
             print('{} match {}'.format(i, j))
-            # if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
-            # if i == 1 or j == 1:
-            if i == 1 or j == 1:
-
+            if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
                 break
             i += 1
             j += 1
@@ -219,14 +213,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             raise Exception
 
     @staticmethod
-    def best_fit_slope_and_intercept(x_values, y_values):
+    def best_fit_slope_and_intercept(x_values, y_values) -> tuple:
         m = (((mean(x_values) * mean(y_values)) - mean(x_values * y_values)) /
              ((mean(x_values) * mean(x_values)) - mean(x_values * x_values)))
         c = mean(y_values) - m * mean(x_values)
         return m, c
 
     @staticmethod
-    def change_price(agent):
+    def change_price(agent) -> None:
         percentage_change = agent.new_production_capacity / agent.production_capacity
         if isinstance(agent, Seller):
             new_price = int(agent.min_price * percentage_change)
@@ -234,6 +228,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         elif isinstance(agent, Buyer):
             new_price = int(agent.max_price * percentage_change)
             agent.max_price = random.randint(new_price - 1, new_price + 1)
+
+    @property
+    def seller_num(self) -> int:
+        return len(self.sellers)
+
+    @property
+    def buyer_num(self) -> int:
+        return len(self.buyers)
 
 
 
