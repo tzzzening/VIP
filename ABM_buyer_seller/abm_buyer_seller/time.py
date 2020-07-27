@@ -29,7 +29,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.buyers = []
         self.steps = 1
         # print('TIME INIT')
-        random.seed(2)
+        random.seed(4)
 
     def __str__(self) -> str:
         output = ""
@@ -57,7 +57,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         if self.steps == 1:
             self.match_agents()  # shift to every month
             print(self)
-        daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
+        # daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
+        average_daily_demand = int(self.steps * 0.01 + 5)  # steps * gradient + y-intercept
+        daily_demand = random.randint(average_daily_demand - 2, average_daily_demand + 2)
         for i in range(self.seller_num):
             seller = self.get_seller_from_list(i)
             seller.step()
@@ -73,11 +75,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             self.buyers = []
 
         for agent in self.agent_buffer(shuffled=False):
-            # print(agent.daily_demand)
-            # print(agent.capacity_planning_strategy)
             agent.advance()
-            # print(agent.demand_list)
-            # print('cap list', agent.capacity_list)
+            print(agent.demand_list)
+            print('cap list', agent.capacity_list)
             # print('pro list', agent.production_list)
             # print('price list', agent.price_list)
             # print(agent.capacity)
