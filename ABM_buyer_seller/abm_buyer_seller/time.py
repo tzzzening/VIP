@@ -94,7 +94,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             if self.steps % 28 == 0:
                 self.plan_capacity(agent)
             elif self.steps % 28 == agent.days_taken_to_increase_capacity and self.steps > 28:
-                agent.capacity = agent.new_capacity
+                agent.production_capacity = agent.new_production_capacity
 
         self.steps += 1
         self.time += 1
@@ -102,7 +102,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     def set_trade_quantity(self, seller) -> None:
         buyer = seller.buyer
         seller_quantity = seller.waste_left
-        buyer_quantity = buyer.weekly_capacity
+        buyer_quantity = buyer.waste_treatment_capacity
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
@@ -121,10 +121,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.total_waste_produced += seller.waste_left
         self.total_cost_without_trading_seller += \
             seller.waste_left * seller.cost_per_unit_waste_disposed + \
-            seller.maintenance_cost_per_capacity * seller.capacity
+            seller.maintenance_cost_per_capacity * seller.production_capacity
 
         self.total_cost_with_trading_seller += \
-            seller.maintenance_cost_per_capacity * seller.capacity
+            seller.maintenance_cost_per_capacity * seller.production_capacity
 
         if seller.is_matched:
             self.set_trade_quantity(seller)
@@ -141,11 +141,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         buyer.weekly_demand = daily_demand
         self.total_cost_without_trading_buyer += \
             buyer.new_input * buyer.cost_per_new_input + \
-            buyer.maintenance_cost_per_capacity * buyer.capacity
+            buyer.maintenance_cost_per_capacity * buyer.total_capacity
             # buyer.maintenance_cost_per_capacity * buyer.weekly_capacity
 
         # self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.weekly_capacity
-        self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.capacity
+        self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.total_capacity
 
         if buyer.is_matched:
             cost = buyer.new_input * buyer.cost_per_new_input + \
@@ -165,13 +165,13 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         print('gradient and y-intercept', m, c)
         if agent.capacity_planning_strategy is CapacityPlanningStrategies.lead:
             print('lead')
-            agent.new_capacity = int(56 * m + c)  # change magic numbers later
+            agent.new_production_capacity = int(56 * m + c)  # change magic numbers later
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.match:
             print('match')
-            agent.new_capacity = int(42 * m + c)
+            agent.new_production_capacity = int(42 * m + c)
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.lag:
             print('lag')
-            agent.new_capacity = int(28 * m + c)
+            agent.new_production_capacity = int(28 * m + c)
         else:
             raise Exception
 
