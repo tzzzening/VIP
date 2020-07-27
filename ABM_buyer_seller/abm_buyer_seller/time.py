@@ -73,9 +73,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             # print(agent.capacity_planning_strategy)
             agent.advance()
             # print(agent.demand_list)
-            print('cap list', agent.capacity_list)
-            print('pro list', agent.production_list)
-            print('price list', agent.price_list)
+            # print('cap list', agent.capacity_list)
+            # print('pro list', agent.production_list)
+            # print('price list', agent.price_list)
             # print(agent.capacity)
             if self.steps % 28 == 0:
                 self.plan_capacity(agent)
@@ -97,20 +97,23 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             seller = self.get_seller_from_list(i)
             buyer = self.get_buyer_from_list(j)
             if seller.min_price > buyer.max_price:
+                print('{} rejected'.format(j))
                 # if j == (self.buyer_num - 1):
-                if j == 0:
+                if j == 1:
                     break
                 j += 1
                 continue
 
             self.prepare_trade(seller, buyer)
+            print('{} match {}'.format(i, j))
             # if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
             # if i == 1 or j == 1:
-            if i == 0 or j == 0:
+            if i == 1 or j == 1:
 
                 break
             i += 1
             j += 1
+
         return
 
     @staticmethod
@@ -222,7 +225,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         c = mean(y_values) - m * mean(x_values)
         return m, c
 
-    def change_price(self, agent):
+    @staticmethod
+    def change_price(agent):
         percentage_change = agent.new_production_capacity / agent.production_capacity
         if isinstance(agent, Seller):
             new_price = int(agent.min_price * percentage_change)
