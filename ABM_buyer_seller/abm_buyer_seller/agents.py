@@ -12,7 +12,7 @@ class WasteAgent(Agent):
         self.weekly_demand = 0
         self.demand_list = []
         self.capacity_list = []  # temporary
-        self.production_list = [] # temporary
+        self.production_list = []  # temporary
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
         self.new_production_capacity = 0
@@ -27,7 +27,7 @@ class WasteAgent(Agent):
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
             del self.capacity_list[0]  # temp
-            del self.production_list[0]
+            del self.production_list[0]  # temp
 
 
 class Seller(WasteAgent):
@@ -62,14 +62,10 @@ class Seller(WasteAgent):
         """
         self.weekly_production = self.production_capacity
         self.waste_left = self.waste_generated_per_good * self.weekly_production
-        # self.waste_left = random.randint((self.weekly_waste_produced - 1), (self.weekly_waste_produced + 1))
-        # self.waste_left = 6
 
     def advance(self) -> None:
-        # print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
         if self.is_matched:
             self.sell()
-        # print('seller {} has {} waste left'.format(self.unique_id, self.waste_left))
         self.edit_demand_list()
 
 
@@ -79,17 +75,15 @@ class Buyer(WasteAgent):
     """
     def __init__(self, unique_id, waste_treatment_capacity, max_price, production_capacity, model) -> None:
         super().__init__(unique_id, model)
-        self.waste_treatment_capacity = waste_treatment_capacity  # for waste treatment?
+        self.waste_treatment_capacity = waste_treatment_capacity
         self.max_price = max_price
         self.seller = None
         self.trade_cost = None
         self.waste_treatment_capacity_left = 0
         self.cost_per_new_input = 10
-        # self.input = 10
         self.new_input = 2  # change later
-        # self.total_input = 0
         self.input_per_good = 1
-        self.production_capacity = production_capacity  # for goods
+        self.production_capacity = production_capacity
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
 
     def __str__(self) -> str:
@@ -107,14 +101,12 @@ class Buyer(WasteAgent):
         Update waste treatment capacity and generate production.
         :return:
         """
-        self.waste_treatment_capacity_left = self.waste_treatment_capacity  # this is wrong, capacity left is refering to waste, weekly capacity is refering to production
+        self.waste_treatment_capacity_left = self.waste_treatment_capacity
         self.weekly_production = min(self.production_capacity, self.total_input // self.input_per_good)
 
     def advance(self) -> None:
-        # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
         if self.is_matched:
             self.buy()
-        # print('buyer {} has {} capacity left'.format(self.unique_id, self.capacity_left))
         self.edit_demand_list()
 
     @property

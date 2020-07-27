@@ -54,22 +54,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         After which, updates the class variables for recycling rate and cost savings calculation.
         Finally, executes the advance of all agents.
         """
-        # print('yoyoo')
-        # print(self.__str__())
-        # self.match_agents()
-        # for agent in self.agent_buffer(shuffled=False):
-        #     # maybe can come back and check this buffer thing and try to change it to a WasteAgent
-        #     agent.step()
-        #     if isinstance(agent, Seller):
-        #         self.total_waste_produced += agent.waste_left
-        #         self.total_cost_without_trading_seller += \
-        #             agent.waste_left * agent.cost_per_unit_waste_disposed
-        #         if agent.is_matched:
-        #             self.set_trade_quantity(agent)
-        #
-        # for agent in self.agent_buffer(shuffled=False):
-        #     agent.advance()
-        # here
+
         daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
         for i in range(len(self.sellers)):
         # for i in range(2):
@@ -106,7 +91,6 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         trade_quantity = min(seller_quantity, buyer_quantity)
         seller.trade_quantity = trade_quantity
         buyer.trade_quantity = trade_quantity
-        # buyer.total_input = buyer.new_input + trade_quantity
         self.total_waste_traded += trade_quantity
         return
 
@@ -142,9 +126,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.total_cost_without_trading_buyer += \
             buyer.new_input * buyer.cost_per_new_input + \
             buyer.maintenance_cost_per_capacity * buyer.total_capacity
-            # buyer.maintenance_cost_per_capacity * buyer.weekly_capacity
 
-        # self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.weekly_capacity
         self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.total_capacity
 
         if buyer.is_matched:

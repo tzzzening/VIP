@@ -16,7 +16,6 @@ server = ModularServer(WasteModel, [chart],
                         'buyer_num': UserSettableParameter('slider', 'Number of buyers', 3, 1, 10),
                         'width': 1, 'height': 1})
 server.port = 8521
-# server.launch()
 
 
 

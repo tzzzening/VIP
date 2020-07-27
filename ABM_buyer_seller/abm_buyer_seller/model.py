@@ -34,10 +34,8 @@ class WasteModel(Model):
     Testing 123.
     """
 
-    # num_steps = 0
     total_waste_produced = 0
     total_waste_traded = 0
-    # total_waste_traded_per_step = 0
     total_cost_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
     total_cost_with_trading_seller = 0
     total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
@@ -78,9 +76,6 @@ class WasteModel(Model):
         # self.schedule.add(buyer)
 
         self.match_agents()
-        # print('match with who')
-        # for i in self.schedule.sellers:
-        #     print(i[2].unique_id, i[2].buyer)
         self.data_collector = DataCollector(
             model_reporters={'Recycling_Rate': compute_recycling_rate,
                              'Seller_Savings': compute_seller_savings,
@@ -126,9 +121,7 @@ class WasteModel(Model):
         while True:
             print(i, j)
             seller = self.get_seller_from_list(i)
-            # print(seller.unique_id)
             buyer = self.get_buyer_from_list(j)
-            # print(buyer.unique_id)
             if seller.min_price > buyer.max_price:
                 if j == (self.buyer_num - 1):
                     break
@@ -150,14 +143,6 @@ class WasteModel(Model):
 
     def get_buyer_from_list(self, index) -> Buyer:
         return self.schedule.buyers[index][2]
-
-    # @property
-    # def seller_count(self) -> int:
-    #     return len(self.schedule.sellers)
-    #
-    # @property
-    # def buyer_count(self) -> int:
-    #     return len(self.schedule.buyers)
 
     @staticmethod
     def prepare_trade(seller, buyer) -> None:
