@@ -87,8 +87,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             # print(agent.daily_demand)
             # print(agent.capacity_planning_strategy)
             agent.advance()
-            print(agent.demand_list)
-            # print(agent.capacity_list)
+            # print(agent.demand_list)
+            print('cap list', agent.capacity_list)
+            print('pro list', agent.production_list)
             # print(agent.capacity)
             if self.steps % 28 == 0:
                 self.plan_capacity(agent)

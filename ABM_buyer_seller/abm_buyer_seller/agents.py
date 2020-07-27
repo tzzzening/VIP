@@ -13,6 +13,7 @@ class WasteAgent(Agent):
         self.weekly_demand = 0
         self.demand_list = []
         self.capacity_list = []  # temporary
+        self.production_list = [] # temporary
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
         self.new_capacity = 0
@@ -22,9 +23,11 @@ class WasteAgent(Agent):
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.weekly_demand)
         self.capacity_list.append(self.capacity)  # temp
+        self.production_list.append(self.weekly_production)  # temp
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
             del self.capacity_list[0]  # temp
+            del self.production_list[0]
 
 
 class Seller(WasteAgent):
@@ -55,7 +58,7 @@ class Seller(WasteAgent):
 
     def step(self) -> None:
         """
-        Generate waste for the day.
+        Generate production and waste for the week.
         """
         self.weekly_production = self.capacity
         self.waste_left = self.waste_generated_per_good * self.weekly_production
@@ -87,7 +90,7 @@ class Buyer(WasteAgent):
         # self.total_input = 0
         self.input_per_good = 1
         self.capacity = capacity  # for goods
-        self.capacity_planning_strategy = CapacityPlanningStrategies.lead
+        self.capacity_planning_strategy = CapacityPlanningStrategies.match
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\
@@ -100,7 +103,11 @@ class Buyer(WasteAgent):
         self.capacity_left -= self.trade_quantity
 
     def step(self) -> None:
-        self.capacity_left = self.weekly_capacity
+        """
+
+        :return:
+        """
+        self.capacity_left = self.weekly_capacity  # this is wrong, capacity left is refering to waste, weekly capacity is refering to production
         self.weekly_production = min(self.capacity, self.total_input / self.input_per_good)
 
     def advance(self) -> None:
