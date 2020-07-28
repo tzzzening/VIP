@@ -11,22 +11,22 @@ def compute_recycling_rate(model) -> float:
 
 
 def compute_seller_savings(model) -> float:
-    money_saved = model.total_cost_without_trading_seller - model.total_cost_with_trading_seller
-    return money_saved / model.total_cost_without_trading_seller
+    money_saved = model.total_profit_without_trading_seller - model.total_profit_with_trading_seller
+    return money_saved / model.total_profit_without_trading_seller
 
 
 def compute_buyer_savings(model) -> float:
-    money_saved = model.total_cost_without_trading_buyer - model.total_cost_with_trading_buyer
-    return money_saved / model.total_cost_without_trading_buyer
+    money_saved = model.total_profit_without_trading_buyer - model.total_profit_with_trading_buyer
+    return money_saved / model.total_profit_without_trading_buyer
 
 
 def compute_overall_savings(model) -> float:
-    total_costs_without_trading = \
-        model.total_cost_without_trading_seller + model.total_cost_without_trading_buyer
-    total_costs_with_trading = \
-        model.total_cost_with_trading_seller + model.total_cost_with_trading_buyer
-    money_saved = total_costs_without_trading - total_costs_with_trading
-    return money_saved / total_costs_without_trading
+    total_profit_without_trading = \
+        model.total_profit_without_trading_seller + model.total_profit_without_trading_buyer
+    total_profit_with_trading = \
+        model.total_profit_with_trading_seller + model.total_profit_with_trading_buyer
+    money_saved = total_profit_without_trading - total_profit_with_trading
+    return money_saved / total_profit_without_trading
 
 
 class WasteModel(Model):
@@ -36,10 +36,10 @@ class WasteModel(Model):
 
     total_waste_produced = 0
     total_waste_traded = 0
-    total_cost_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
-    total_cost_with_trading_seller = 0
-    total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
-    total_cost_with_trading_buyer = 0
+    total_profit_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_profit_with_trading_seller = 0
+    total_profit_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_profit_with_trading_buyer = 0
 
     def __init__(self, seller_num, buyer_num, width, height) -> None:
         super().__init__()
@@ -67,26 +67,6 @@ class WasteModel(Model):
         buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
                       production_capacity=5, model=self)
         self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
-                      production_capacity=5, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
-                      production_capacity=5, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
-                      production_capacity=5, model=self)
-        self.schedule.add(buyer)
-        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
-                      production_capacity=5, model=self)
-        self.schedule.add(buyer)
 
         # self.match_agents()
         self.data_collector = DataCollector(
@@ -99,24 +79,24 @@ class WasteModel(Model):
     def step(self) -> None:
         print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
         print('before seller costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+              format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
         print('before buyer costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+              format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
 
         self.steps = self.schedule.steps
         print('step', self.steps)
         self.schedule.step()
         self.total_waste_produced = self.schedule.total_waste_produced
         self.total_waste_traded = self.schedule.total_waste_traded
-        self.total_cost_without_trading_seller = self.schedule.total_cost_without_trading_seller
-        self.total_cost_with_trading_seller = self.schedule.total_cost_with_trading_seller
-        self.total_cost_without_trading_buyer = self.schedule.total_cost_without_trading_buyer
-        self.total_cost_with_trading_buyer = self.schedule.total_cost_with_trading_buyer
+        self.total_profit_without_trading_seller = self.schedule.total_profit_without_trading_seller
+        self.total_profit_with_trading_seller = self.schedule.total_profit_with_trading_seller
+        self.total_profit_without_trading_buyer = self.schedule.total_profit_without_trading_buyer
+        self.total_profit_with_trading_buyer = self.schedule.total_profit_with_trading_buyer
         print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
         print('after seller costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_seller, self.total_cost_without_trading_seller))
+              format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
         print('after buyer costs savings: trade {} no {}'.
-              format(self.total_cost_with_trading_buyer, self.total_cost_without_trading_buyer))
+              format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
         print('seller saving', compute_seller_savings(self))
         print('buyer saving', compute_buyer_savings(self))
         print('overall saving', compute_overall_savings(self))

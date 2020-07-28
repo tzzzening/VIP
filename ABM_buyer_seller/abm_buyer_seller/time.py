@@ -17,10 +17,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     total_waste_produced = 0
     total_waste_traded = 0
 
-    total_cost_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
-    total_cost_with_trading_seller = 0
-    total_cost_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
-    total_cost_with_trading_buyer = 0
+    total_profit_without_trading_seller = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_profit_with_trading_seller = 0
+    total_profit_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
+    total_profit_with_trading_buyer = 0
     # random.seed(1)
 
     def __init__(self, model) -> None:
@@ -29,7 +29,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.buyers = []
         self.steps = 1
         # print('TIME INIT')
-        random.seed(4)
+        random.seed(1)
 
     def __str__(self) -> str:
         output = ""
@@ -170,11 +170,13 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     def update_variables_seller(self, seller, daily_demand) -> None:
         seller.weekly_demand = daily_demand
         self.total_waste_produced += seller.waste_left
-        self.total_cost_without_trading_seller += \
-            seller.waste_left * seller.cost_per_unit_waste_disposed + \
+        self.total_profit_without_trading_seller += \
+            daily_demand * seller.profit_per_good - \
+            seller.waste_left * seller.cost_per_unit_waste_disposed - \
             seller.maintenance_cost_per_capacity * seller.production_capacity
 
-        self.total_cost_with_trading_seller += \
+        self.total_profit_with_trading_seller += \
+            daily_demand * seller.profit_per_good - \
             seller.maintenance_cost_per_capacity * seller.production_capacity
 
         if seller.is_matched:
@@ -182,26 +184,31 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             cost = (seller.waste_left - seller.trade_quantity) * \
                 seller.cost_per_unit_waste_disposed - \
                 seller.trade_quantity * seller.trade_cost
-            self.total_cost_with_trading_seller += cost
+            self.total_profit_with_trading_seller -= cost
+
         else:
-            self.total_cost_with_trading_seller += \
+            self.total_profit_with_trading_seller -= \
                 seller.waste_left * seller.cost_per_unit_waste_disposed
         return
 
     def update_variables_buyer(self, buyer, daily_demand) -> None:
         buyer.weekly_demand = daily_demand
-        self.total_cost_without_trading_buyer += \
-            buyer.new_input * buyer.cost_per_new_input + \
+        self.total_profit_without_trading_buyer += \
+            daily_demand * buyer.profit_per_good - \
+            buyer.new_input * buyer.cost_per_new_input - \
             buyer.maintenance_cost_per_capacity * buyer.total_capacity
 
-        self.total_cost_with_trading_buyer += buyer.maintenance_cost_per_capacity * buyer.total_capacity
+        self.total_profit_with_trading_buyer += \
+            daily_demand * buyer.profit_per_good - \
+            buyer.maintenance_cost_per_capacity * buyer.total_capacity
 
         if buyer.is_matched:
             cost = buyer.new_input * buyer.cost_per_new_input + \
                    buyer.trade_quantity * buyer.trade_cost
-            self.total_cost_with_trading_buyer += cost
+            self.total_profit_with_trading_buyer -= cost
+
         else:
-            self.total_cost_with_trading_buyer += \
+            self.total_profit_with_trading_buyer -= \
                 buyer.new_input * buyer.cost_per_new_input
         return
 

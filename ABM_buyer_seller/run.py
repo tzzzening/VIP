@@ -21,20 +21,20 @@ def compute_recycling_rate(model) -> float:
 
 
 def compute_seller_savings(model) -> float:
-    money_saved = model.total_cost_without_trading_seller - model.total_cost_with_trading_seller
-    return money_saved / model.total_cost_without_trading_seller
+    money_saved = model.total_profit_without_trading_seller - model.total_profit_with_trading_seller
+    return money_saved / model.total_profit_without_trading_seller
 
 
 def compute_buyer_savings(model) -> float:
-    money_saved = model.total_cost_without_trading_buyer - model.total_cost_with_trading_buyer
-    return money_saved / model.total_cost_without_trading_buyer
+    money_saved = model.total_profit_without_trading_buyer - model.total_profit_with_trading_buyer
+    return money_saved / model.total_profit_without_trading_buyer
 
 
 def compute_overall_savings(model) -> float:
     total_costs_without_trading = \
-        model.total_cost_without_trading_seller + model.total_cost_without_trading_buyer
+        model.total_profit_without_trading_seller + model.total_profit_without_trading_buyer
     total_costs_with_trading = \
-        model.total_cost_with_trading_seller + model.total_cost_with_trading_buyer
+        model.total_profit_with_trading_seller + model.total_profit_with_trading_buyer
     money_saved = total_costs_without_trading - total_costs_with_trading
     return money_saved / total_costs_without_trading
 

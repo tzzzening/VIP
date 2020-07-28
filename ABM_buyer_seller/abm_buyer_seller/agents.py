@@ -20,6 +20,7 @@ class WasteAgent(Agent):
         self.maintenance_cost_per_capacity = 1
         self.weekly_production = 0
         self.production_capacity = 0
+        self.profit_per_good = 3
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.weekly_demand)
