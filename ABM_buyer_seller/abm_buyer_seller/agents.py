@@ -7,7 +7,7 @@ class WasteAgent(Agent):
         super().__init__(unique_id, model)
         self.is_matched = False
         self.trade_quantity = 0
-        self.cost_to_change_capacity = 5  # assume that it is the same cost to increase or decrease capacity
+        # self.cost_to_change_capacity = 5  # assume that it is the same cost to increase or decrease capacity
         self.days_taken_to_increase_capacity = 7
         self.weekly_demand = 0
         self.demand_list = []
@@ -20,7 +20,7 @@ class WasteAgent(Agent):
         self.maintenance_cost_per_capacity = 1
         self.weekly_production = 0
         self.production_capacity = 0
-        self.profit_per_good = 3
+        self.profit_per_good = 50
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.weekly_demand)
@@ -47,7 +47,7 @@ class Seller(WasteAgent):
         self.production_capacity = production_capacity
         self.buyer = None
         self.waste_left = 0
-        self.cost_per_unit_waste_disposed = 4
+        self.cost_per_unit_waste_disposed = 15
         self.trade_cost = 0
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
         self.waste_generated_per_good = 2
@@ -86,11 +86,11 @@ class Buyer(WasteAgent):
         self.seller = None
         self.trade_cost = None
         self.waste_treatment_capacity_left = 0
-        self.cost_per_new_input = 10
-        self.new_input = 2  # change later
+        self.cost_per_new_input = 20  # but there will come a point when the waste is more expensive
+        self.new_input = 150
         self.input_per_good = 1
         self.production_capacity = production_capacity
-        self.capacity_planning_strategy = CapacityPlanningStrategies.lead
+        self.capacity_planning_strategy = CapacityPlanningStrategies.lag
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\

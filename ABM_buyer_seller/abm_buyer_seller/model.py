@@ -62,10 +62,10 @@ class WasteModel(Model):
         #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
         #     self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), min_price=5, production_capacity=4, model=self)
+        seller = Seller(unique_id=self.next_id(), min_price=10, production_capacity=180, model=self)
         self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=3, max_price=5,
-                      production_capacity=5, model=self)
+        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=50, max_price=12,
+                      production_capacity=170, model=self)
         self.schedule.add(buyer)
 
         # self.match_agents()
@@ -105,55 +105,55 @@ class WasteModel(Model):
     def __str__(self) -> str:
         return "\nCurrent Status:\n" + self.schedule.__str__()  # to print in order of price
 
-    def match_agents(self) -> None:
-        """
-        Match agents according to minimum price of the seller and the maximum price of the buyer.
-        """
-        i = 0
-        j = 0
-        while True:
-            print(i, j)
-            seller = self.get_seller_from_list(i)
-            buyer = self.get_buyer_from_list(j)
-            if seller.min_price > buyer.max_price:
-                if j == (self.buyer_num - 1):
-                    break
-                j += 1
-                continue
+    # def match_agents(self) -> None:
+    #     """
+    #     Match agents according to minimum price of the seller and the maximum price of the buyer.
+    #     """
+    #     i = 0
+    #     j = 0
+    #     while True:
+    #         print(i, j)
+    #         seller = self.get_seller_from_list(i)
+    #         buyer = self.get_buyer_from_list(j)
+    #         if seller.min_price > buyer.max_price:
+    #             if j == (self.buyer_num - 1):
+    #                 break
+    #             j += 1
+    #             continue
+    #
+    #         self.prepare_trade(seller, buyer)
+    #         # if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
+    #         # if i == 1 or j == 1:
+    #         if i == 0 or j == 0:
+    #
+    #             break
+    #         i += 1
+    #         j += 1
+    #     return
 
-            self.prepare_trade(seller, buyer)
-            # if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
-            # if i == 1 or j == 1:
-            if i == 0 or j == 0:
+    # def get_seller_from_list(self, index) -> Seller:
+    #     return self.schedule.sellers[index][2]
+    #
+    # def get_buyer_from_list(self, index) -> Buyer:
+    #     return self.schedule.buyers[index][2]
 
-                break
-            i += 1
-            j += 1
-        return
-
-    def get_seller_from_list(self, index) -> Seller:
-        return self.schedule.sellers[index][2]
-
-    def get_buyer_from_list(self, index) -> Buyer:
-        return self.schedule.buyers[index][2]
-
-    @staticmethod
-    def prepare_trade(seller, buyer) -> None:
-        """
-        Update the trading partners and the cost per unit waste of each agent.
-        :param seller:
-        :param buyer:
-        """
-
-        seller.buyer = buyer
-        buyer.seller = seller
-        seller.is_matched = True
-        buyer.is_matched = True
-
-        cost = (seller.min_price + buyer.max_price) / 2
-        seller.trade_cost = cost
-        buyer.trade_cost = cost
-        return
+    # @staticmethod
+    # def prepare_trade(seller, buyer) -> None:
+    #     """
+    #     Update the trading partners and the cost per unit waste of each agent.
+    #     :param seller:
+    #     :param buyer:
+    #     """
+    #
+    #     seller.buyer = buyer
+    #     buyer.seller = seller
+    #     seller.is_matched = True
+    #     buyer.is_matched = True
+    #
+    #     cost = (seller.min_price + buyer.max_price) / 2
+    #     seller.trade_cost = cost
+    #     buyer.trade_cost = cost
+    #     return
 
 
 

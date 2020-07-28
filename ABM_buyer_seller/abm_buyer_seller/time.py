@@ -21,14 +21,12 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     total_profit_with_trading_seller = 0
     total_profit_without_trading_buyer = 0  # cost incurred without trading waste, ie all waste is disposed of
     total_profit_with_trading_buyer = 0
-    # random.seed(1)
 
     def __init__(self, model) -> None:
         super().__init__(model)
         self.sellers = []
         self.buyers = []
         self.steps = 1
-        # print('TIME INIT')
         random.seed(1)
 
     def __str__(self) -> str:
@@ -58,8 +56,8 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             self.match_agents()  # shift to every month
             print(self)
         # daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
-        average_daily_demand = int(self.steps * 0.01 + 5)  # steps * gradient + y-intercept
-        daily_demand = random.randint(average_daily_demand - 2, average_daily_demand + 2)
+        average_daily_demand = int(self.steps * 2 + 50)  # steps * gradient + y-intercept
+        daily_demand = random.randint(average_daily_demand - 5, average_daily_demand + 5)
         for i in range(self.seller_num):
             seller = self.get_seller_from_list(i)
             seller.step()
@@ -108,7 +106,15 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             seller = self.get_seller_from_list(i)
             buyer = self.get_buyer_from_list(j)
             if seller.min_price > buyer.max_price:
-                print('{} rejected'.format(j))
+                print('{} rejected seller'.format(j))
+                if j == self.buyer_num - 1:
+                    break
+                j += 1
+                continue
+
+            cost = (seller.min_price + buyer.max_price) / 2
+            if cost > buyer.cost_per_new_input:
+                print('{} rejected new price'.format(j))
                 if j == self.buyer_num - 1:
                     break
                 j += 1
@@ -241,11 +247,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
     def change_price(self, agent) -> None:
         percentage_change = agent.new_production_capacity / agent.production_capacity
         if isinstance(agent, Seller):
-            new_price = int(agent.min_price * percentage_change)
-            agent.min_price = random.randint(new_price - 1, new_price + 1)
+            new_max_price = int(agent.min_price * percentage_change)
+            agent.min_price = random.randint(new_max_price - 3, new_max_price + 3)
         elif isinstance(agent, Buyer):
-            new_price = int(agent.max_price * percentage_change)
-            agent.max_price = random.randint(new_price - 1, new_price + 1)
+            new_max_price = int(agent.max_price * percentage_change)
+            agent.max_price = random.randint(new_max_price - 3, new_max_price + 3)
+            new_cost_per_new_input = int(agent.cost_per_new_input * percentage_change)
+            agent.cost_per_new_input = \
+                random.randint(new_cost_per_new_input - 2, new_cost_per_new_input + 4)
         self.add(agent)
 
     @property
