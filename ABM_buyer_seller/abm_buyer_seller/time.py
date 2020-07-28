@@ -76,14 +76,18 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             agent.advance()
             print(agent.demand_list)
             print('cap list', agent.capacity_list)
+            if isinstance(agent, Buyer):
+                print('waste list', agent.waste_treatment_capacity_list)
             # print('pro list', agent.production_list)
             # print('price list', agent.price_list)
             # print(agent.capacity)
             if self.steps % 28 == 0:
                 self.plan_capacity(agent)
-                self.change_price(agent)
+                self.change_price_and_waste_capacity(agent)
             elif self.steps % 28 == agent.days_taken_to_increase_capacity and self.steps > 28:
                 agent.production_capacity = agent.new_production_capacity
+                if isinstance(agent, Buyer):
+                    agent.waste_treatment_capacity = agent.new_waste_treatment_capacity
 
         if self.steps % 28 == 0:
             print(self)
@@ -244,7 +248,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         c = mean(y_values) - m * mean(x_values)
         return m, c
 
-    def change_price(self, agent) -> None:
+    def change_price_and_waste_capacity(self, agent) -> None:
         percentage_change = agent.new_production_capacity / agent.production_capacity
         if isinstance(agent, Seller):
             new_max_price = int(agent.min_price * percentage_change)
@@ -255,6 +259,9 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             new_cost_per_new_input = int(agent.cost_per_new_input * percentage_change)
             agent.cost_per_new_input = \
                 random.randint(new_cost_per_new_input - 2, new_cost_per_new_input + 4)
+            new_waste_treatment_capacity = int(agent.waste_treatment_capacity * percentage_change)
+            agent.new_waste_treatment_capacity = \
+                random.randint(new_waste_treatment_capacity - 1, new_waste_treatment_capacity + 1)
         self.add(agent)
 
     @property

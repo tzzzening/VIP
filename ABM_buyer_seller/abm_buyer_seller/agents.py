@@ -17,10 +17,10 @@ class WasteAgent(Agent):
         self.capacity_planning_strategy = None
         self.day_capacity_changes = 0
         self.new_production_capacity = 0
-        self.maintenance_cost_per_capacity = 1
+        self.maintenance_cost_per_capacity = 2
         self.weekly_production = 0
         self.production_capacity = 0
-        self.profit_per_good = 50
+        self.profit_per_good = 60
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.weekly_demand)
@@ -30,11 +30,14 @@ class WasteAgent(Agent):
             self.price_list.append(self.min_price)  # temp
         elif isinstance(self, Buyer):
             self.price_list.append(self.max_price)  # temp
+            self.waste_treatment_capacity_list.append(self.waste_treatment_capacity)  # temp
         if len(self.demand_list) > 28:  # 28 is the number to plot the demand forecast
             del self.demand_list[0]
             del self.capacity_list[0]  # temp
             del self.production_list[0]  # temp
             del self.price_list[0]  # temp
+            if isinstance(self, Buyer):
+                del self.waste_treatment_capacity_list[0]  # temp
 
 
 class Seller(WasteAgent):
@@ -82,6 +85,8 @@ class Buyer(WasteAgent):
     def __init__(self, unique_id, waste_treatment_capacity, max_price, production_capacity, model) -> None:
         super().__init__(unique_id, model)
         self.waste_treatment_capacity = waste_treatment_capacity
+        self.new_waste_treatment_capacity = 0
+        self.waste_treatment_capacity_list = []  # temp
         self.max_price = max_price
         self.seller = None
         self.trade_cost = None
