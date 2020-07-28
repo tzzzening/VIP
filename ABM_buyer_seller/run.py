@@ -4,6 +4,7 @@ import numpy as np
 from time import time
 import matplotlib.pyplot as plt
 from mesa.batchrunner import BatchRunner
+import pandas as pd
 
 # from abm_buyer_seller.server import server
 # server.launch()
@@ -44,7 +45,7 @@ variable_params = {'seller_num': range(2, 3), 'buyer_num': range(2, 3)}
 # fixed_params = {'width': 1, 'height': 1, 'num_per_agent': 2}
 # variable_params = None
 batch_run = BatchRunner(WasteModel, variable_params, fixed_params,
-                        iterations=2, max_steps=2,
+                        iterations=2, max_steps=3,
                         model_reporters={'Recycling_Rate': compute_recycling_rate,
                                          'Seller_Savings': compute_seller_savings,
                                          'Buyer_Savings': compute_buyer_savings,

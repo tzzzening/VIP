@@ -4,6 +4,8 @@ from abm_buyer_seller.agents import Seller, Buyer
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 import random
+import pandas as pd
+import xlsxwriter
 
 
 def compute_recycling_rate(model) -> float:
@@ -29,6 +31,16 @@ def compute_overall_savings(model) -> float:
     money_saved = total_profit_without_trading - total_profit_with_trading
     return money_saved / total_profit_without_trading
 
+
+count = 0
+data_dict = {'hello': ['bye']}
+
+data = pd.DataFrame(data_dict)
+data_to_excel = pd.ExcelWriter('ABM_data.xlsx', engine='xlsxwriter')
+data.to_excel(data_to_excel, sheet_name='Sheet1')
+data_to_excel.save()
+count += 1
+print(count)
 
 class WasteModel(Model):
     """
@@ -91,7 +103,7 @@ class WasteModel(Model):
         #       format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
 
         self.steps = self.schedule.steps
-        print('step', self.steps)
+        # print('step', self.steps)
         self.schedule.step()
         self.total_waste_produced = self.schedule.total_waste_produced
         self.total_waste_traded = self.schedule.total_waste_traded
@@ -104,11 +116,25 @@ class WasteModel(Model):
         #       format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
         # print('after buyer costs savings: trade {} no {}'.
         #       format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
-        print('recycling rate', compute_recycling_rate(self))
-        print('seller saving', compute_seller_savings(self))
-        print('buyer saving', compute_buyer_savings(self))
-        print('overall saving', compute_overall_savings(self))
-        print()
+        if self.steps == 2:
+            print('recycling rate', compute_recycling_rate(self))
+            print('seller saving', compute_seller_savings(self))
+            print('buyer saving', compute_buyer_savings(self))
+            print('overall saving', compute_overall_savings(self))
+            print()
+            recycling_rate = compute_recycling_rate(self)
+            seller_savings = compute_seller_savings(self)
+            buyer_savings = compute_buyer_savings(self)
+            overall_savings = compute_overall_savings(self)
+            data_dict[str(count)] = [str(recycling_rate), str(seller_savings), str(buyer_savings), str(overall_savings)]
+            # data = pd.DataFrame({'data': [recycling_rate,
+            #                               seller_savings,
+            #                               buyer_savings,
+            #                               overall_savings]})
+            # # data = pd.DataFrame({'data': [1, 2, 3]})
+            # data_to_excel = pd.ExcelWriter('ABM_data.xlsx', engine='xlsxwriter')
+            # data.to_excel(data_to_excel, sheet_name='Sheet1')
+            # data_to_excel.save()
         self.data_collector.collect(self)
 
     def __str__(self) -> str:
