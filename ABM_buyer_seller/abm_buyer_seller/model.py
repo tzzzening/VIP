@@ -84,11 +84,11 @@ class WasteModel(Model):
             agent_reporters=None)
 
     def step(self) -> None:
-        print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        print('before seller costs savings: trade {} no {}'.
-              format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
-        print('before buyer costs savings: trade {} no {}'.
-              format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
+        # print('before: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        # print('before seller costs savings: trade {} no {}'.
+        #       format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
+        # print('before buyer costs savings: trade {} no {}'.
+        #       format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
 
         self.steps = self.schedule.steps
         print('step', self.steps)
@@ -99,68 +99,21 @@ class WasteModel(Model):
         self.total_profit_with_trading_seller = self.schedule.total_profit_with_trading_seller
         self.total_profit_without_trading_buyer = self.schedule.total_profit_without_trading_buyer
         self.total_profit_with_trading_buyer = self.schedule.total_profit_with_trading_buyer
-        print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
-        print('after seller costs savings: trade {} no {}'.
-              format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
-        print('after buyer costs savings: trade {} no {}'.
-              format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
+        # print('after: produced {} traded {}'.format(self.total_waste_produced, self.total_waste_traded))
+        # print('after seller costs savings: trade {} no {}'.
+        #       format(self.total_profit_with_trading_seller, self.total_profit_without_trading_seller))
+        # print('after buyer costs savings: trade {} no {}'.
+        #       format(self.total_profit_with_trading_buyer, self.total_profit_without_trading_buyer))
+        print('recycling rate', compute_recycling_rate(self))
         print('seller saving', compute_seller_savings(self))
         print('buyer saving', compute_buyer_savings(self))
         print('overall saving', compute_overall_savings(self))
+        print()
         self.data_collector.collect(self)
 
     def __str__(self) -> str:
         return "\nCurrent Status:\n" + self.schedule.__str__()  # to print in order of price
 
-    # def match_agents(self) -> None:
-    #     """
-    #     Match agents according to minimum price of the seller and the maximum price of the buyer.
-    #     """
-    #     i = 0
-    #     j = 0
-    #     while True:
-    #         print(i, j)
-    #         seller = self.get_seller_from_list(i)
-    #         buyer = self.get_buyer_from_list(j)
-    #         if seller.min_price > buyer.max_price:
-    #             if j == (self.buyer_num - 1):
-    #                 break
-    #             j += 1
-    #             continue
-    #
-    #         self.prepare_trade(seller, buyer)
-    #         # if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
-    #         # if i == 1 or j == 1:
-    #         if i == 0 or j == 0:
-    #
-    #             break
-    #         i += 1
-    #         j += 1
-    #     return
-
-    # def get_seller_from_list(self, index) -> Seller:
-    #     return self.schedule.sellers[index][2]
-    #
-    # def get_buyer_from_list(self, index) -> Buyer:
-    #     return self.schedule.buyers[index][2]
-
-    # @staticmethod
-    # def prepare_trade(seller, buyer) -> None:
-    #     """
-    #     Update the trading partners and the cost per unit waste of each agent.
-    #     :param seller:
-    #     :param buyer:
-    #     """
-    #
-    #     seller.buyer = buyer
-    #     buyer.seller = seller
-    #     seller.is_matched = True
-    #     buyer.is_matched = True
-    #
-    #     cost = (seller.min_price + buyer.max_price) / 2
-    #     seller.trade_cost = cost
-    #     buyer.trade_cost = cost
-    #     return
 
 
 

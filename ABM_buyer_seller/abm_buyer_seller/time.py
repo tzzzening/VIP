@@ -54,7 +54,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         """
         if self.steps == 1:
             self.match_agents()  # shift to every month
-            print(self)
+            # print(self)
         # daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
         average_daily_demand = int(self.steps * 2 + 50)  # steps * gradient + y-intercept
         # daily_demand = random.randint(average_daily_demand - 5, average_daily_demand + 5)
@@ -74,10 +74,10 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         for agent in self.agent_buffer(shuffled=False):
             agent.advance()
-            print(agent.demand_list)
-            print('cap list', agent.capacity_list)
-            if isinstance(agent, Buyer):
-                print('waste list', agent.waste_treatment_capacity_list)
+            # print(agent.demand_list)
+            # print('cap list', agent.capacity_list)
+            # if isinstance(agent, Buyer):
+                # print('waste list', agent.waste_treatment_capacity_list)
             # print('pro list', agent.production_list)
             # print('price list', agent.price_list)
             # print(agent.capacity)
@@ -90,7 +90,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
                     agent.waste_treatment_capacity = agent.new_waste_treatment_capacity
 
         if self.steps % 28 == 0:
-            print(self)
+            # print(self)
             self.initialise_agents()
             self.match_agents()
         # if self.steps == 29:
@@ -106,11 +106,11 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         i = 0
         j = 0
         while True:
-            print(i, j)
+            # print(i, j)
             seller = self.get_seller_from_list(i)
             buyer = self.get_buyer_from_list(j)
             if seller.min_price > buyer.max_price:
-                print('{} rejected seller'.format(j))
+                # print('{} rejected seller'.format(j))
                 if j == self.buyer_num - 1:
                     break
                 j += 1
@@ -118,14 +118,14 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
             cost = (seller.min_price + buyer.max_price) / 2
             if cost > buyer.cost_per_new_input:
-                print('{} rejected new price'.format(j))
+                # print('{} rejected new price'.format(j))
                 if j == self.buyer_num - 1:
                     break
                 j += 1
                 continue
 
             self.prepare_trade(seller, buyer)
-            print('{} match {}'.format(i, j))
+            # print('{} match {}'.format(i, j))
             if i == (self.seller_num - 1) or j == (self.buyer_num - 1):
                 break
             i += 1
@@ -233,15 +233,15 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         x_values = np.array(list(range(1, 29)), dtype=np.float64)
         y_values = np.array(agent.demand_list, dtype=np.float64)
         m, c = self.best_fit_slope_and_intercept(x_values, y_values)
-        print('gradient and y-intercept', m, c)
+        # print('gradient and y-intercept', m, c)
         if agent.capacity_planning_strategy is CapacityPlanningStrategies.lead:
-            print('lead')
+            # print('lead')
             agent.new_production_capacity = int(56 * m + c)  # change magic numbers later
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.match:
-            print('match')
+            # print('match')
             agent.new_production_capacity = int(42 * m + c)
         elif agent.capacity_planning_strategy is CapacityPlanningStrategies.lag:
-            print('lag')
+            # print('lag')
             agent.new_production_capacity = int(28 * m + c)
         else:
             raise Exception
