@@ -3,6 +3,7 @@ from abm_buyer_seller.time import SimultaneousActivationMoneyModel
 from abm_buyer_seller.agents import Seller, Buyer
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
+import random
 
 
 def compute_recycling_rate(model) -> float:
@@ -54,19 +55,25 @@ class WasteModel(Model):
         self.steps = 0
 
 
-        # for i in range(seller_num):
-        #     seller = Seller(unique_id=self.next_id(), monthly_waste_produced=5,
-        #                     min_price=5, model=self)
-        #     self.schedule.add(seller)
-        # for i in range(buyer_num):
-        #     buyer = Buyer(unique_id=self.next_id(), monthly_capacity=4, max_price=5, model=self)
-        #     self.schedule.add(buyer)
+        for i in range(seller_num):
+            seller = Seller(unique_id=self.next_id(),
+                            min_price=random.randint(10, 14),
+                            production_capacity=random.randint(160, 200),
+                            model=self)
+            self.schedule.add(seller)
+        for i in range(buyer_num):
+            buyer = Buyer(unique_id=self.next_id(),
+                          waste_treatment_capacity=random.randint(40, 60),
+                          max_price=random.randint(12, 16),
+                          production_capacity=random.randint(150, 190),
+                          model=self)
+            self.schedule.add(buyer)
 
-        seller = Seller(unique_id=self.next_id(), min_price=10, production_capacity=180, model=self)
-        self.schedule.add(seller)
-        buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=50, max_price=12,
-                      production_capacity=170, model=self)
-        self.schedule.add(buyer)
+        # seller = Seller(unique_id=self.next_id(), min_price=12, production_capacity=180, model=self)
+        # self.schedule.add(seller)
+        # buyer = Buyer(unique_id=self.next_id(), waste_treatment_capacity=50, max_price=14,
+        #               production_capacity=170, model=self)
+        # self.schedule.add(buyer)
 
         # self.match_agents()
         self.data_collector = DataCollector(

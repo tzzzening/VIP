@@ -20,7 +20,8 @@ class WasteAgent(Agent):
         self.maintenance_cost_per_capacity = 2
         self.weekly_production = 0
         self.production_capacity = 0
-        self.profit_per_good = 60
+        self.profit_per_good = 0
+        self.is_co_investing = True
 
     def edit_demand_list(self) -> None:
         self.demand_list.append(self.weekly_demand)
@@ -50,10 +51,11 @@ class Seller(WasteAgent):
         self.production_capacity = production_capacity
         self.buyer = None
         self.waste_left = 0
-        self.cost_per_unit_waste_disposed = 15
+        self.cost_per_unit_waste_disposed = 5
         self.trade_cost = 0
         self.capacity_planning_strategy = CapacityPlanningStrategies.lead
-        self.waste_generated_per_good = 2
+        self.waste_generated_per_good = 1
+        self.profit_per_good = 70
 
     def __str__(self) -> str:
         output = "Agent {} (seller) has {} waste produced, with min price of {}. "\
@@ -96,6 +98,7 @@ class Buyer(WasteAgent):
         self.input_per_good = 1
         self.production_capacity = production_capacity
         self.capacity_planning_strategy = CapacityPlanningStrategies.lag
+        self.profit_per_good = 60
 
     def __str__(self) -> str:
         output = "Agent {} (buyer) has capacity of {}, with max price of {}. "\

@@ -27,7 +27,7 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
         self.sellers = []
         self.buyers = []
         self.steps = 1
-        random.seed(1)
+        # random.seed(1)
 
     def __str__(self) -> str:
         output = ""
@@ -57,16 +57,16 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             print(self)
         # daily_demand = random.randint(5, 10)  # assume that all agents have the same demand
         average_daily_demand = int(self.steps * 2 + 50)  # steps * gradient + y-intercept
-        daily_demand = random.randint(average_daily_demand - 5, average_daily_demand + 5)
+        # daily_demand = random.randint(average_daily_demand - 5, average_daily_demand + 5)
         for i in range(self.seller_num):
             seller = self.get_seller_from_list(i)
             seller.step()
-            self.update_variables_seller(seller, daily_demand)
+            self.update_variables_seller(seller, random.randint(average_daily_demand - 5, average_daily_demand + 5))
 
         for i in range(self.buyer_num):
             buyer = self.get_buyer_from_list(i)
             buyer.step()
-            self.update_variables_buyer(buyer, daily_demand)
+            self.update_variables_buyer(buyer, random.randint(average_daily_demand - 5, average_daily_demand + 5))
 
         if self.steps % 28 == 0:
             self.sellers = []
@@ -194,11 +194,12 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
             cost = (seller.waste_left - seller.trade_quantity) * \
                 seller.cost_per_unit_waste_disposed - \
                 seller.trade_quantity * seller.trade_cost
-            self.total_profit_with_trading_seller -= cost
-
+            if seller.is_co_investing:
+                cost += seller.buyer.waste_treatment_capacity * \
+                        seller.buyer.maintenance_cost_per_capacity / 2
         else:
-            self.total_profit_with_trading_seller -= \
-                seller.waste_left * seller.cost_per_unit_waste_disposed
+            cost = seller.waste_left * seller.cost_per_unit_waste_disposed
+        self.total_profit_with_trading_seller -= cost
         return
 
     def update_variables_buyer(self, buyer, daily_demand) -> None:
@@ -210,16 +211,20 @@ class SimultaneousActivationMoneyModel(SimultaneousActivation):
 
         self.total_profit_with_trading_buyer += \
             daily_demand * buyer.profit_per_good - \
-            buyer.maintenance_cost_per_capacity * buyer.total_capacity
+            buyer.maintenance_cost_per_capacity * buyer.production_capacity
 
-        if buyer.is_matched:
+        if buyer.is_matched and buyer.is_co_investing:
             cost = buyer.new_input * buyer.cost_per_new_input + \
-                   buyer.trade_quantity * buyer.trade_cost
-            self.total_profit_with_trading_buyer -= cost
-
+                   buyer.trade_quantity * buyer.trade_cost + \
+                   buyer.maintenance_cost_per_capacity * buyer.waste_treatment_capacity / 2
+        elif buyer.is_matched and not buyer.is_co_investing:
+            cost = buyer.new_input * buyer.cost_per_new_input + \
+                   buyer.trade_quantity * buyer.trade_cost + \
+                   buyer.maintenance_cost_per_capacity * buyer.waste_treatment_capacity
         else:
-            self.total_profit_with_trading_buyer -= \
-                buyer.new_input * buyer.cost_per_new_input
+            cost = buyer.new_input * buyer.cost_per_new_input + \
+                   buyer.maintenance_cost_per_capacity * buyer.waste_treatment_capacity
+        self.total_profit_with_trading_buyer -= cost
         return
 
     def plan_capacity(self, agent: WasteAgent) -> None:
